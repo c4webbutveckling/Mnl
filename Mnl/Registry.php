@@ -31,7 +31,7 @@ class Mnl_Registry
         self::$_variables[$varName] = $value;
     }
     
-	public function set($varName, $value)
+    public function set($varName, $value)
     {
         self::$_variables[$varName] = $value;
     }

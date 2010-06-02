@@ -12,18 +12,16 @@ class Mnl_Controller
 {
     private $_action;
     private $_controller;
-	
-	protected $_view;
-    
+
+    protected $_view;
+
     protected $_params;
 
-	private $_disableView = false;
+    private $_disableView = false;
 
     public function __construct()
     {
-
-		$this->_view = new Mnl_View();
-		
+        $this->_view = new Mnl_View();
     }
     
     public function setParams($params = null)
@@ -33,27 +31,28 @@ class Mnl_Controller
     
     public function deploy()
     {
-		$view = '';
+        $view = '';
         $action = $this->_action."Action";
         $this->$action();
-		if(!$this->_disableView) {
-			return $this->_view->display($this->_controller.'/'.strtolower($this->_action).'.phtml');
-		} else {
-			return '';
-		}
+        if (!$this->_disableView) {
+            return $this->_view->display(
+                $this->_controller.'/'.strtolower($this->_action).'.phtml'
+            );
+        } else {
+            return '';
+        }
     }
     
-	public function setAction($action)
-	{
-		$this->_action = $action;
-	}
+    public function setAction($action)
+    {
+        $this->_action = $action;
+    }
 
-	public function setControllerName($controller)
-	{
-		$this->_controller = $controller;
-	}
+    public function setControllerName($controller)
+    {
+        $this->_controller = $controller;
+    }
 
-	
     public function redirect($where)
     {
         $where = BASE_URL.$where;
@@ -61,8 +60,8 @@ class Mnl_Controller
         exit(); 
     }
 
-	protected function disableView()
-	{
-		$this->_disableView = true;
-	}
+    protected function disableView()
+    {
+        $this->_disableView = true;
+    }
 }

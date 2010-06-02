@@ -53,7 +53,8 @@ class Mnl_Db_Table
         }
 
         $stmt = $this->_dbAdapter->prepare(
-            "SELECT * FROM ".$this->_table." WHERE ".implode(' AND ',$where).$orderBy
+            "SELECT * FROM ".$this->_table." WHERE ".
+            implode(' AND ', $where).$orderBy
         );
 
         for ($i = 1; $i <= count($cols); $i++) {
@@ -93,7 +94,8 @@ class Mnl_Db_Table
         }
         $stmt = $this->_dbAdapter->prepare(
             "INSERT INTO ".$this->_table."(`"
-            .implode('`, `', $cols)."`) VALUES (".implode(', ', $questionmarks).")"
+            .implode('`, `', $cols).
+            "`) VALUES (".implode(', ', $questionmarks).")"
         );
 
         for ($i = 1; $i <= count($cols); $i++) {
@@ -127,7 +129,8 @@ class Mnl_Db_Table
         }
 
         $query = "UPDATE ".$this->_table." SET "
-            .implode(' = ?, ', $cols)." = ? WHERE ".implode(' = ? AND ', $whereCols)." = ?";
+            .implode(' = ?, ', $cols)." = ? WHERE ".
+            implode(' = ? AND ', $whereCols)." = ?";
 
         $stmt = $this->_dbAdapter->prepare($query);
 
@@ -161,7 +164,7 @@ class Mnl_Db_Table
         }
 
         $stmt = $this->_dbAdapter->prepare(
-            "DELETE FROM ".$this->_table." WHERE ".implode(' AND ',$where)
+            "DELETE FROM ".$this->_table." WHERE ".implode(' AND ', $where)
         );
 
         for ($i = 1; $i <= count($cols); $i++) {

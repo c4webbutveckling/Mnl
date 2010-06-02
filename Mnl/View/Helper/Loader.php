@@ -28,7 +28,9 @@ class Mnl_View_Helper_Loader
     public function registerHelperPath($prefix, $path)
     {
         if (!file_exists($path)) {
-            throw new Mnl_View_Helper_Loader_Exception('Error: Path '.$path.' does not exist.');
+            throw new Mnl_View_Helper_Loader_Exception(
+                'Error: Path '.$path.' does not exist.'
+            );
         }
         if (!isset($this->_helperPaths[$prefix])) {
             $this->_helperPaths[$prefix] = $path;
@@ -38,7 +40,9 @@ class Mnl_View_Helper_Loader
     public function getHelperPaths()
     {
         if (count($this->_helperPaths) == 0) {
-            throw new Mnl_View_Helper_Loader_Exception("Error: No paths registered.");
+            throw new Mnl_View_Helper_Loader_Exception(
+                "Error: No paths registered."
+            );
         }
         return $this->_helperPaths;
     }
@@ -49,12 +53,14 @@ class Mnl_View_Helper_Loader
         $instance = self::getInstance();
         $paths = $instance->getHelperPaths();
         foreach ($paths as $prefix => $path) {
-            if(file_exists($path.$name.'.php')) {
+            if (file_exists($path.$name.'.php')) {
                 require_once $path.$name.'.php';
                 return $prefix.$name;
             }
         }
 
-        throw new Mnl_View_Helper_Loader_Exception('Error: No helper with name '.$name.' found');
+        throw new Mnl_View_Helper_Loader_Exception(
+            'Error: No helper with name '.$name.' found'
+        );
     }
 }

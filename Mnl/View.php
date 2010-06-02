@@ -57,7 +57,7 @@ class Mnl_View
     public function display($file)
     {
         $layout = Mnl_View_Layout::getLayout();
-        if($layout->isEnabled()) {
+        if ($layout->isEnabled()) {
             $view = $this->fetch($file);
             $layout->setViewContent($view);
             $result = $layout->fetch();
@@ -71,8 +71,8 @@ class Mnl_View
     {
         $helper = Mnl_View_Helper_Loader::load($name);
         return call_user_func_array(
-                array($helper, 'run'),
-                array($args)
-            );
+            array($helper, 'run'),
+            array($args)
+        );
     }
 }

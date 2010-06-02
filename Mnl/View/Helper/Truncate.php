@@ -21,7 +21,7 @@ class Mnl_View_Helper_Truncate extends Mnl_View_Helper_Abstract
             $padding = '';
         }
         
-        $newString = substr($string,0,$length);
+        $newString = substr($string, 0, $length);
         $newString .= $padding;
         
         return $newString;

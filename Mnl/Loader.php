@@ -8,12 +8,12 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_Loader 
+class Mnl_Loader
 {
     static function loadClass($class)
     {
         $nameArray = explode('_', $class);
-        $namePath = implode('/',$nameArray);
+        $namePath = implode('/', $nameArray);
         if (file_exists(APPLICATION_PATH.'../library/'.$namePath.'.php')) {
             include_once(APPLICATION_PATH.'../library/'.$namePath.'.php');
         }

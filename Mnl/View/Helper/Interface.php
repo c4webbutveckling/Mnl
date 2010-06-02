@@ -8,8 +8,8 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
- interface Mnl_View_Helper_Interface
- {
-     public static function run($args);
- }
+interface Mnl_View_Helper_Interface
+{
+    public static function run($args);
+}
  

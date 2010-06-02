@@ -13,15 +13,15 @@ class Mnl_Log
     /**
      * @var bool Do you want to log the date
      */
-    protected $logDate;
+    protected $_logDate;
     /**
      * @var string Format of date to log
      */
-    protected $logDateFormat;
+    protected $_logDateFormat;
     /**
      * @var string Path to the logfile
      */
-    protected $logFile;
+    protected $_logFile;
 
     /**
      * Constructor
@@ -29,20 +29,20 @@ class Mnl_Log
      */
     public function __construct(array $configuration = array())
     {
-        $this->logFile = "logs/systemlog";
-        $this->logDate = true;
-        $this->logDateFormat = "Y-m-d H:i:s";
+        $this->_logFile = "logs/systemlog";
+        $this->_logDate = true;
+        $this->_logDateFormat = "Y-m-d H:i:s";
 
-        if(isset($configuration['logFile'])) {
-            $this->logFile = $configuration['logFile'];
+        if (isset($configuration['logFile'])) {
+            $this->_logFile = $configuration['logFile'];
         }
 
-        if(isset($configuration['logDate'])) {
-            $this->logDate = $configuration['logDate'];
+        if (isset($configuration['logDate'])) {
+            $this->_logDate = $configuration['logDate'];
         }
 
-        if(isset($configuration['logDateFormat'])) {
-            $this->logDateFormat = $configuration['logDateFormat'];
+        if (isset($configuration['logDateFormat'])) {
+            $this->_logDateFormat = $configuration['logDateFormat'];
         }
 
 
@@ -54,19 +54,19 @@ class Mnl_Log
      * @return TRUE on success FALSE on error
      */
     public function write($string)
-	{
-		$fh = fopen($this->logFile, "a+");
+    {
+        $fh = fopen($this->_logFile, "a+");
 
-		if ($fh !== false) {
-            if ($this->logDate) {
-                $string = date($this->logDateFormat, time()).' '.$string;
+        if ($fh !== false) {
+            if ($this->_logDate) {
+                $string = date($this->_logDateFormat, time()).' '.$string;
             }
-			fwrite($fh, $string);
-			fclose($fh);
-			return true;
-		} else {
-			return false;
-		}
-	}
+            fwrite($fh, $string);
+            fclose($fh);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
