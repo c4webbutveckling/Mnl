@@ -135,7 +135,7 @@ class Mnl_Router
 
     private function getRequest()
     {
-        $this->request = @$_GET['route'];
+        $this->_request = @$_GET['route'];
     }
 
     private function isReadable($file)
