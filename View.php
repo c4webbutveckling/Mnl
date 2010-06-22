@@ -54,15 +54,16 @@ class Mnl_View
         return $view;
     }
 
-    public function display($file)
+    public function display($file, $layoutFile = 'layout.phtml')
     {
         $layout = Mnl_View_Layout::getLayout();
         if ($layout->isEnabled()) {
+            $this->assign($layout->getVars());
             $view = $this->fetch($file);
             $layout->setViewContent($view);
-            $result = $layout->fetch();
+            $result = $layout->fetch($layoutFile);
         } else {
-            return $this->fetch($file);
+            $result = $this->fetch($file);
         }
         echo $result;
     }

@@ -42,6 +42,11 @@ class Mnl_View_Layout
         }
     }
 
+    public function getVars()
+    {
+        return $this->_vars;
+    }
+
     public function fetch($file = 'layout.phtml')
     {
 
@@ -54,6 +59,11 @@ class Mnl_View_Layout
             $layoutResult
         );
         return $layoutResult;
+    }
+
+    public function disable()
+    {
+        $this->_enabled = false;
     }
 
     public function isEnabled()
