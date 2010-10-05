@@ -25,8 +25,11 @@ class Mnl_Db_Table
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($table = '')
     {
+        if ($table !== '') {
+            $this->_table = $table;
+        }
         $this->_dbAdapter = Mnl_Db_Connection::getConnection();
     }
 
