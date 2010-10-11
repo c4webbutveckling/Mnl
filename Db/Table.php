@@ -131,10 +131,10 @@ class Mnl_Db_Table
             $whereVals[] = $val;
         }
 
-        $query = "UPDATE ".$this->_table." SET "
-            .implode(' = ?, ', $cols)." = ? WHERE ".
-            implode(' = ? AND ', $whereCols)." = ?";
-
+        $query = "UPDATE ".$this->_table." SET `".
+           implode('` = ?, `', $cols)."` = ? WHERE ".
+           implode(' = ? AND ', $whereCols)." = ?";
+        
         $stmt = $this->_dbAdapter->prepare($query);
 
         $valCounter = 0;
