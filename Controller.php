@@ -35,9 +35,13 @@ class Mnl_Controller
         $action = $this->_action."Action";
         $this->$action();
         if (!$this->_disableView) {
-            return $this->_view->display(
-                $this->_controller.'/'.strtolower($this->_action).'.phtml'
-            );
+            if (isset($this->_viewFile) && $this->_viewFile != '') {
+                return $this->_view->display($this->_viewFile);
+            } else {
+                return $this->_view->display(
+                    $this->_controller.'/'.strtolower($this->_action).'.phtml'
+                );
+            }
         } else {
             return '';
         }
@@ -58,6 +62,11 @@ class Mnl_Controller
         $where = BASE_URL.$where;
         header('Location: '.$where);
         exit(); 
+    }
+
+    public function setViewFile($viewFile)
+    {
+        $this->_viewFile = $viewFile;
     }
 
     protected function disableView()
