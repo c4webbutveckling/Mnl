@@ -80,7 +80,7 @@ class Mnl_Router
             }
 
             $controller = new $controller();
-            $controller->setParams($this->params);
+            $controller->setParams($this->_params);
 
             if (!is_callable(array($controller,$action))) {
                 throw(new Mnl_Exception("Could not find action: ".$action));
