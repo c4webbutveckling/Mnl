@@ -75,11 +75,11 @@ abstract class Mnl_Crud
         $table->delete(array('id' => $this->id));
     }
 
-    public static function all()
+    public static function all($where = array('1' => '1'))
     {
         $class = get_called_class();
         $table = new Mnl_Db_Table($class::$_table);
-        $result = $table->fetchAll(array('1' => '1'));
+        $result = $table->fetchAll($where);
         $collection = array();
         foreach($result as $result) {
             $obj = new $class;
