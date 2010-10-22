@@ -71,12 +71,12 @@ class Mnl_Db_Table
         return $result;
     }
 
-    public function find($id)
+    public function find($value, $column = 'id')
     {
         $stmt = $this->_dbAdapter->prepare(
-            "SELECT * FROM ".$this->_table." WHERE id = :Id"
+            "SELECT * FROM ".$this->_table." WHERE `".$column."` = :Value"
         );
-        $stmt->bindParam('Id', $id);
+        $stmt->bindParam('Value', $value);
         $stmt->execute();
         $this->_statementError = $stmt->errorInfo();
         return $stmt->fetch();
