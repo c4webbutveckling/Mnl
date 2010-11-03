@@ -1,5 +1,6 @@
 Mnl
 ===
 
-Example installation coming soon.
+[Example installation][0]
 
+[0]: https://github.com/mnilsson/Mnl-Example
