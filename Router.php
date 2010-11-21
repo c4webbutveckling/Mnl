@@ -43,7 +43,11 @@ class Mnl_Router
         }
 
         while (isset($route[0]) && $route[0] != '') {
-            $this->_params[$route[0]] = $route[1];
+            if(isset($route[1])) {
+                $this->_params[$route[0]] = $route[1];
+            } else {
+                $this->_params[$route[0]] = '';
+            }
             array_shift($route);
             array_shift($route);
         }
