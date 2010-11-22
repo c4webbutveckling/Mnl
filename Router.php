@@ -10,6 +10,11 @@
 */
 class Mnl_Router
 {
+
+    public $controllerPaths;
+
+    public $module;
+
     private $_request;
     private $_controller;
     private $_action;
@@ -19,16 +24,19 @@ class Mnl_Router
 
     function __construct()
     {
-        $this->getRequest();
-        $this->prepare();
-        $this->run();
     }
 
     public function prepare()
     {
         $route = explode('/', $this->_request);
 
+        $this->module = 'default';
+
         if (isset($route[0]) && $route[0] != '') {
+            if(in_array($route[0], array_keys($this->controllerPaths))) {
+                $this->module = ucwords($route[0]);
+                array_shift($route);
+            }
             $this->_controller = $route[0];
             array_shift($route);
         } else {
@@ -55,6 +63,13 @@ class Mnl_Router
 
     function run()
     {
+        $this->getRequest();
+        $this->prepare();
+        $this->deployController();
+    }
+
+    public function deployController()
+    {
         $controller = $this->_controller."Controller";
         $action = $this->_action."Action";
 
@@ -62,19 +77,23 @@ class Mnl_Router
             if (
                 is_readable(
                     APPLICATION_PATH.'/'.
-                    Mnl_Registry::getInstance()->defaultControllerPath.
+                    $this->controllerPaths[strtolower($this->module)].
                     '/'.$controller.'.php'
                 )
             ) {
                 require_once(
                     APPLICATION_PATH.'/'.
-                    Mnl_Registry::getInstance()->defaultControllerPath.
+                    $this->controllerPaths[strtolower($this->module)].
                     '/'.$controller.'.php'
                     );
             } else {
                 throw(new Mnl_Exception(
                     "Could not find controller: ".$controller
                     ));
+            }
+
+            if ($this->module != 'default') {
+                $controller = $this->module.'_'.$controller;
             }
 
             if (!class_exists($controller)) {
@@ -149,5 +168,19 @@ class Mnl_Router
         }
         @close($f);
         return true;
+    }
+
+    public function setControllerDirectory($directory)
+    {
+        if (is_array($directory)) {
+            $this->controllerPaths = $directory;
+        } else {
+            $this->controllerPaths['default'] = $directory;
+        }
+    }
+
+    public function addControllerDirectory($directory, $moduleName)
+    {
+        $this->controllerPaths[$moduleName] = $directory;
     }
 }
