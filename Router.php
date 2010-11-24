@@ -87,9 +87,9 @@ class Mnl_Router
                     '/'.$controller.'.php'
                     );
             } else {
-                throw(new Mnl_Exception(
+                throw new Mnl_Exception(
                     "Could not find controller: ".$controller
-                    ));
+                    );
             }
 
             if ($this->module != 'default') {
@@ -97,9 +97,9 @@ class Mnl_Router
             }
 
             if (!class_exists($controller)) {
-                throw(new Mnl_Exception(
+                throw new Mnl_Exception(
                     "Could not find controller: ".$controller
-                    ));
+                    );
             }
 
             $controller = new $controller();
@@ -114,7 +114,7 @@ class Mnl_Router
             echo $controller->deploy();
 
         } catch (Mnl_Exception $e) {
-            echo "Exception: '".$e->getMessage()."'";
+            throw $e;
         }
     }
 
