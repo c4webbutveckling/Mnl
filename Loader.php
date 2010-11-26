@@ -13,6 +13,9 @@ class Mnl_Loader
     static function loadClass($class)
     {
         $nameArray = explode('_', $class);
+        if (count($nameArray) == 1) {
+            $nameArray = explode('\\', $class);
+        }
         $namePath = implode('/', $nameArray);
         if (file_exists(APPLICATION_PATH.'../library/'.$namePath.'.php')) {
             include_once(APPLICATION_PATH.'../library/'.$namePath.'.php');
