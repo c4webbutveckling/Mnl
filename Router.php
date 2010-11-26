@@ -37,7 +37,7 @@ class Mnl_Router
                 $this->module = ucwords($route[0]);
                 array_shift($route);
             }
-            $this->_controller = $route[0];
+            $this->_controller = ucwords($route[0]);
             array_shift($route);
         } else {
             $this->_controller = defaultController;
