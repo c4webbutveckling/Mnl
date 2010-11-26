@@ -10,6 +10,8 @@
  */
 class Mnl_Controller
 {
+
+    public $module;
     private $_action;
     private $_controller;
 
@@ -38,13 +40,22 @@ class Mnl_Controller
             if (isset($this->_viewFile) && $this->_viewFile != '') {
                 return $this->_view->display($this->_viewFile);
             } else {
+                $viewFile = $this->_controller.'/'.strtolower($this->_action).'.phtml';
+                if ($this->module != 'default') {
+                    $viewFile = strtolower($this->module).'/'.$viewFile;
+                }
                 return $this->_view->display(
-                    $this->_controller.'/'.strtolower($this->_action).'.phtml'
+                    $viewFile
                 );
             }
         } else {
             return '';
         }
+    }
+
+    public function setModule($module)
+    {
+        $this->module = $module;
     }
     
     public function setAction($action)
