@@ -22,7 +22,6 @@ abstract class Mnl_Crud
         $table = new Mnl_Db_Table($this::$_table);
         $result = $table->find($id);
         $this->set($result);
-        $this->loadReferences();
     }
 
     public function save($data = array())
@@ -48,7 +47,13 @@ abstract class Mnl_Crud
 
     public function __get($key)
     {
-        if (isset($this->$key)) {
+        if (array_key_exists($key, $this::$hasOne)) {
+            $class = new $key;
+            $columnName = $this::$hasOne[$key];
+            $class->load($this->$columnName);
+            $this->$key = $class;
+            return $this->$key;
+        } else if (isset($this->$key)) {
             return $this->$key;
         } else {
             return null;
@@ -89,14 +94,5 @@ abstract class Mnl_Crud
             $collection[] = $obj;
         }
         return $collection;
-    }
-
-    public function loadReferences()
-    {
-        foreach ($this::$hasOne as $reference => $referenceColumn) {
-            $class = new $reference;
-            $class->load($this->$referenceColumn);
-            $this->$reference = $class;
-        }
     }
 }
