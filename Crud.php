@@ -12,6 +12,7 @@
 abstract class Mnl_Crud
 {
     public static $_table;
+    public static $hasOne = array();
 
     public function load($id = 0)
     {
@@ -21,6 +22,7 @@ abstract class Mnl_Crud
         $table = new Mnl_Db_Table($this::$_table);
         $result = $table->find($id);
         $this->set($result);
+        $this->loadReferences();
     }
 
     public function save($data = array())
@@ -87,5 +89,14 @@ abstract class Mnl_Crud
             $collection[] = $obj;
         }
         return $collection;
+    }
+
+    public function loadReferences()
+    {
+        foreach ($this::$hasOne as $reference => $referenceColumn) {
+            $class = new $reference;
+            $class->load($this->$referenceColumn);
+            $this->$reference = $class;
+        }
     }
 }
