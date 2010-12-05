@@ -37,7 +37,7 @@ class Mnl_Db_Table
      *
      * @param string $where
      */
-    public function fetchAll($data, $order = array())
+    public function fetchAll($data, $order = array(), $limit = 0, $offset = 0)
     {
         $cols = array();
         $vals = array();
@@ -55,9 +55,15 @@ class Mnl_Db_Table
             $orderBy = '';
         }
 
+        if ($limit > 0) {
+            $limit = ' LIMIT '.$offset.','.$limit;
+        } else {
+            $limit = '';
+        }
+
         $stmt = $this->_dbAdapter->prepare(
             "SELECT * FROM ".$this->_table." WHERE ".
-            implode(' AND ', $where).$orderBy
+            implode(' AND ', $where).$orderBy.$limit
         );
 
         for ($i = 1; $i <= count($cols); $i++) {
