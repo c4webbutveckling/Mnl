@@ -43,11 +43,17 @@ class Mnl_Db_Table
         $vals = array();
 
         $where = array();
+        $joins = array();
         foreach ($data as $col => $val) {
+            if (is_array($val)) {
+                $joins[$col] = $val;
+                continue;
+            }
             $cols[] = $col;
             $vals[] = $val;
             $where[] = $col.' = ?';
         }
+        $joins = $this->buildJoins($joins);
 
         if (count($order) != 0) {
             $orderBy = ' ORDER BY '.$order[0].' '.$order[1];
@@ -62,7 +68,7 @@ class Mnl_Db_Table
         }
 
         $stmt = $this->_dbAdapter->prepare(
-            "SELECT * FROM ".$this->_table." WHERE ".
+            "SELECT * FROM ".$this->_table." ".$joins." WHERE ".
             implode(' AND ', $where).$orderBy.$limit
         );
 
@@ -75,6 +81,21 @@ class Mnl_Db_Table
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
+    }
+
+    public function buildJoins($joins)
+    {
+        $sql = '';
+        foreach ($joins as $table => $joinOn) {
+            $join = "JOIN ".$table." ON ";
+            $onArray = array();
+            foreach ($joinOn as $col => $val) {
+                $onArray[] = $col." = ".$val;
+            }
+            $join .= implode(' AND ', $onArray);
+            $sql .= $join." ";
+        }
+        return $sql;
     }
 
     public function find($value, $column = 'id')
