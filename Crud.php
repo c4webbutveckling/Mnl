@@ -95,4 +95,12 @@ abstract class Mnl_Crud
         }
         return $collection;
     }
+
+    public static function count($where = array('1' => '1'))
+    {
+        $class = get_called_class();
+        $table = new Mnl_Db_Table($class::$_table);
+        $result = count($table->fetchAll($where));
+        return $result;
+    }
 }
