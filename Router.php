@@ -15,12 +15,12 @@ class Mnl_Router
 
     public $module;
 
-    private $_request;
-    private $_controller;
-    private $_action;
-    private $_module;
+    public $_request;
+    public $_controller;
+    public $_action;
+    public $_module;
 
-    private $_params = array();
+    public $_params = array();
 
     function __construct()
     {
@@ -162,7 +162,7 @@ class Mnl_Router
         $this->_request = @$_GET['route'];
     }
 
-    private function isReadable($file)
+    public function isReadable($file)
     {
         if (!$f = @fopen($file, 'r', true)) {
             return false;
