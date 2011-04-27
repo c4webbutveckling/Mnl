@@ -61,7 +61,7 @@ class Mnl_Router
         }
     }
 
-    function run()
+    public function run()
     {
         $this->getRequest();
         $this->prepare();
@@ -119,7 +119,7 @@ class Mnl_Router
         }
     }
 
-    function getController($controller, $file, $action, $args )
+    public function getController($controller, $file, $action, $args )
     {
         $route = $_GET['route'];
         $route = trim($route, '/\\');
@@ -157,7 +157,7 @@ class Mnl_Router
         $args = $parts;
     }
 
-    private function getRequest()
+    public function getRequest()
     {
         $this->_request = @$_GET['route'];
     }
