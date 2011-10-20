@@ -8,7 +8,8 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_View
+namespace Mnl;
+class View
 {
     private $_vars = array();
 
@@ -47,7 +48,7 @@ class Mnl_View
             $$key = $val;
         }
         ob_start();
-        include(Mnl_Registry::getInstance()->templatePath.
+        include(Registry::getInstance()->templatePath.
             '/'.$file);
         $view = ob_get_contents();
         ob_end_clean();
@@ -56,7 +57,7 @@ class Mnl_View
 
     public function display($file, $layoutFile = 'layout.phtml')
     {
-        $layout = Mnl_View_Layout::getLayout();
+        $layout = View\Layout::getLayout();
         if ($layout->isEnabled()) {
             $this->assign($layout->getVars());
             $view = $this->fetch($file);

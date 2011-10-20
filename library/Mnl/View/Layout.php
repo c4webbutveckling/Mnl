@@ -7,8 +7,9 @@
 * @author   Markus Nilsson <markus@mnilsson.se>
 * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
 * @link     http://mnilsson.se/Mnl
-*/
-class Mnl_View_Layout
+ */
+namespace Mnl\View;
+class Layout
 {
     protected $_name;
     protected $_vars;
@@ -50,7 +51,7 @@ class Mnl_View_Layout
     public function fetch($file = 'layout.phtml')
     {
 
-        $layout = new Mnl_View();
+        $layout = new \Mnl\View();
         $layout->assign($this->_vars);
         $layoutResult = $layout->fetch($file);
         $layoutResult = str_replace(

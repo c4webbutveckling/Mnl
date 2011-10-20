@@ -8,7 +8,8 @@
 * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
 * @link     http://mnilsson.se/Mnl
 */
-class Mnl_Router
+namespace Mnl;
+class Router
 {
 
     public $controllerPaths;

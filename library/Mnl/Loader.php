@@ -8,32 +8,42 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_Loader
+namespace Mnl;
+class Loader
 {
-    static function loadClass($class)
+    protected $_paths;
+
+    public function __construct()
     {
-        $nameArray = explode('_', $class);
-        if (count($nameArray) == 1) {
-            $nameArray = explode('\\', $class);
+        $this->_paths = array();
+    }
+
+    public function autoload($class)
+    {
+        $namePath = str_replace('_', '/', $class);
+        $namePath = str_replace('\\', '/', $namePath);
+
+        if (file_exists(dirname(realpath(__FILE__)).$namePath.'.php')) {
+            include dirname(realpath(__FILE__)).$namePath.'.php';
         }
-        $namePath = implode('/', $nameArray);
-        if (file_exists(APPLICATION_PATH.'../library/'.$namePath.'.php')) {
-            include_once(APPLICATION_PATH.'../library/'.$namePath.'.php');
-        }
-        foreach (Mnl_Loader_Paths::getInstance()->getPaths() as $path) {
+        foreach ($this->_paths as $path) {
             if (file_exists($path.$namePath.'.php')) {
-                include_once($path.$namePath.'.php');
+                include $path.$namePath.'.php';
             }
         }
     }
 
-    public static function registerAutoload()
+    public function registerPath($path)
     {
-        spl_autoload_register('Mnl_Loader::autoload');
+        if (is_dir($path) && !in_array($path, $this->_paths)) {
+            $this->_paths[] = $path;
+            return true;
+        }
+        return false;
     }
 
-    public static function autoload($class)
+    public function registerAutoload()
     {
-        self::loadClass($class);
+        spl_autoload_register(array($this, 'autoload'));
     }
 }

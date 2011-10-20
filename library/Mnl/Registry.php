@@ -8,7 +8,8 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_Registry
+namespace Mnl;
+class Registry
 {
     private static $_instance;
     private static $_variables;

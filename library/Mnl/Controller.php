@@ -8,7 +8,9 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_Controller
+namespace Mnl;
+
+class Controller
 {
 
     public $module;
@@ -23,7 +25,7 @@ class Mnl_Controller
 
     public function __construct()
     {
-        $this->_view = new Mnl_View();
+        $this->_view = new View();
     }
     
     public function setParams($params = null)
