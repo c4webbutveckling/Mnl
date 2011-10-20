@@ -24,7 +24,9 @@ class Inflector
     {
         $underscored = '';
         for ($i = 0; $i < strlen($input); $i++) {
-            if ($input[$i] === strtoupper($input[$i]) && $i > 0) {
+            if ($input[$i] == '_') {
+                continue;
+            } else if ($input[$i] === strtoupper($input[$i]) && $i > 0) {
                 $underscored .= "_".$input[$i];
             } else {
                 $underscored .= $input[$i];
@@ -36,6 +38,9 @@ class Inflector
 
     public function pluralize($input)
     {
+        if (preg_match('/.s$/', $input)) {
+            return $input;
+        }
         $input = $input.'s';
         return $input;
     }
