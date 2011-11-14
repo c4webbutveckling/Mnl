@@ -11,7 +11,7 @@ abstract class AbstractStorage
         $this->_connection = $storageConnection;
     }
 
-    public function retreive($value, $columnName = 'id')
+    public function find($value, $columnName = 'id')
     {
         $this->_primaryKey = $columnName;
         $stmt = $this->_connection->prepare("SELECT * FROM " . $this->_tableName . " WHERE " . $columnName . " = :Value");
@@ -54,7 +54,7 @@ abstract class AbstractStorage
 
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         $stmt = $this->_connection->prepare("DELETE FROM " . $this->_tableName . " WHERE " . $this->_primaryKey . " = :Id");
         $stmt->bindParam('Id', $id);

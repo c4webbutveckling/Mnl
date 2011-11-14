@@ -16,7 +16,7 @@ class Base extends AbstractStorage
         $inflector = new Inflector();
         $this->setTable($inflector->tableize($this->_reflector->getName()));
         if (!isset(self::$_connection)) {
-            throw new Exception("Database Connection not set");
+            throw new \Exception("Database Connection not set");
         }
         parent::__construct(self::$_connection);
     }
@@ -33,15 +33,14 @@ class Base extends AbstractStorage
         if (empty($data)) {
             $data = $this->getStoreableData();
         }
-        var_dump($this->_table);
         $data['created_at'] = time();
         $this->_id = parent::create($data);
         $this->applyStorageData($data);
     }
 
-    public function retreive($value, $columnName = 'id')
+    public function find($value, $columnName = 'id')
     {
-        $result = parent::retreive($value, $columnName);
+        $result = parent::find($value, $columnName);
         if ($result === false) {
             return;
         }
@@ -59,9 +58,9 @@ class Base extends AbstractStorage
         $this->applyStorageData($data);
     }
 
-    public function destroy($id = 0)
+    public function delete($id = 0)
     {
-        parent::destroy($this->_id);
+        parent::delete($this->_id);
     }
     private function getStoreableData()
     {
@@ -114,6 +113,9 @@ class Base extends AbstractStorage
 
     public static function setConnection($connection)
     {
+        if (!is_a($connection, '\Pdo')) {
+            throw new \Exception("Pdo object expected");
+        }
         self::$_connection = $connection;
     }
 }

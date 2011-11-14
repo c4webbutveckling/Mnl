@@ -63,7 +63,7 @@ class Collection
         $objects = array();
         foreach ($result as $id) {
             $o = new $this->_className;
-            $o->retreive($id);
+            $o->find($id);
             $objects[] = $o;
         }
         return $objects;
