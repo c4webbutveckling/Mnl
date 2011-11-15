@@ -8,6 +8,7 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_View_Helper_Loader_Exception extends Mnl_Exception
+namespace Mnl\View\Helper\Loader;
+class Exception extends \Mnl\Exception
 {
 }

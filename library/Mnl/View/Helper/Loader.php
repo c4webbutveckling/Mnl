@@ -8,7 +8,8 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_View_Helper_Loader
+namespace Mnl\View\Helper;
+class Loader
 {
     private static $_instance = null;
     private $_helperPaths = array();
@@ -28,7 +29,7 @@ class Mnl_View_Helper_Loader
     public function registerHelperPath($prefix, $path)
     {
         if (!file_exists($path)) {
-            throw new Mnl_View_Helper_Loader_Exception(
+            throw new Loader\Exception(
                 'Error: Path '.$path.' does not exist.'
             );
         }
@@ -40,7 +41,7 @@ class Mnl_View_Helper_Loader
     public function getHelperPaths()
     {
         if (count($this->_helperPaths) == 0) {
-            throw new Mnl_View_Helper_Loader_Exception(
+            throw new Loader\Exception(
                 "Error: No paths registered."
             );
         }
@@ -59,7 +60,7 @@ class Mnl_View_Helper_Loader
             }
         }
 
-        throw new Mnl_View_Helper_Loader_Exception(
+        throw new Loader\Exception(
             'Error: No helper with name '.$name.' found'
         );
     }

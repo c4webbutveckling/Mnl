@@ -74,7 +74,7 @@ class View
 
     public function __call($name, $args)
     {
-        $helper = Mnl_View_Helper_Loader::load($name);
+        $helper = View\Helper\Loader::load($name);
         return call_user_func_array(
             array($helper, 'run'),
             array($args)
