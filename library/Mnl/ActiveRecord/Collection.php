@@ -72,6 +72,11 @@ class Collection
         return $objects;
     }
 
+    public function toArray()
+    {
+        return $this->getObjects();
+    }
+
     public function first()
     {
         $objects = $this->getObjects();
