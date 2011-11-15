@@ -40,8 +40,11 @@ class Inflector
     {
         if (preg_match('/.s$/', $input)) {
             return $input;
+        } else if (preg_match('/([^aeiouy]|qu)y$/i', $input)) {
+            $input = preg_replace('/([^aeiouy]|qu)y$/i', '\1ies', $input);
+        } else {
+            $input = $input.'s';
         }
-        $input = $input.'s';
         return $input;
     }
 
