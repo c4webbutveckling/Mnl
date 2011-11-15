@@ -48,8 +48,11 @@ class View
             $$key = $val;
         }
         ob_start();
-        include(Registry::getInstance()->templatePath.
-            '/'.$file);
+        if (file_exists(Registry::getInstance()->templatePath.'/'.$file)) {
+            include(Registry::getInstance()->templatePath.'/'.$file);
+        } else {
+            throw new Exception("View file `".$file."` not found");
+        }
         $view = ob_get_contents();
         ob_end_clean();
         return $view;

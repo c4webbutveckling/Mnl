@@ -8,6 +8,7 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_Exception extends Exception
+namespace Mnl;
+class Exception extends \Exception
 {
 }
