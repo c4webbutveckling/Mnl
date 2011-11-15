@@ -9,8 +9,11 @@ class Collection
     protected $_order;
     protected $_limit;
 
+    protected $_executed;
+
     public function __construct($connection, $tableName, $className, $clauses)
     {
+        $this->_executed = false;
         $this->_clauses = array();
         $this->_order = array();
         $this->_limit = array();
@@ -81,10 +84,16 @@ class Collection
 
     protected function execute()
     {
+        if ($this->_executed) {
+            return $this->_queryResult;
+        }
         $query = $this->buildQuery();
         $stmt = $this->_connection->prepare($query['sql']);
         $stmt->execute($query['params']);
-        return $stmt->fetchAll(\PDO::FETCH_COLUMN);
+        $this->_executed = true;
+        $this->_queryResult = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+        return $this->_queryResult;
     }
 
     protected function buildQuery()
