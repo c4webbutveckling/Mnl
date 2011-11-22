@@ -97,27 +97,22 @@ class Collection
         $stmt->execute($query['params']);
         $this->_executed = true;
         $this->_queryResult = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-
         return $this->_queryResult;
     }
 
     protected function buildQuery()
     {
         $sql = "SELECT id FROM " . $this->_tableName;
-        if (empty($this->_clauses)) {
-            return array(
-                'sql' => $sql,
-                'params' => array()
-            );
-        }
-        $sql .= " WHERE ";
         $params = array();
-        $clauses = array();
-        foreach ($this->_clauses as $clause) {
-            $clauses[] = $clause['column'] . " " . $clause['op'] . " :" . $clause['column'];
-            $params[$clause['column']] = $clause['value'];
+        if (!empty($this->_clauses)) {
+            $sql .= " WHERE ";
+            $clauses = array();
+            foreach ($this->_clauses as $clause) {
+                $clauses[] = $clause['column'] . " " . $clause['op'] . " :" . $clause['column'];
+                $params[$clause['column']] = $clause['value'];
+            }
+            $sql .= implode(' AND ', $clauses);
         }
-        $sql .= implode(' AND ', $clauses);
 
         if (!empty($this->_order)) {
             $sql .= ' ORDER BY ';
