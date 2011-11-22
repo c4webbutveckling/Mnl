@@ -1,6 +1,6 @@
 <?php
 /**
- * Mnl_View_Helper_Abstract
+ * Mnl_View_Helper_Interface
  *
  * @category Mnl
  * @package  Mnl_View
@@ -8,10 +8,9 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-abstract class Mnl_View_Helper_Abstract implements Mnl_View_Helper_Interface
+namespace Mnl\View;
+interface HelperInterface
 {
-    public static function run($args)
-    {
-        return $args;
-    }
+    public static function run($args);
 }
+
