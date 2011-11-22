@@ -50,6 +50,7 @@ class Inflector
 
     public function tableize($input)
     {
+        $input = preg_replace('/[^A-Za-z0-9]/', '', $input);
         return $this->underscoreize($this->pluralize($input));
     }
 }
