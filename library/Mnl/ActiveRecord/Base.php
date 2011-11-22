@@ -6,12 +6,17 @@ class Base extends AbstractStorage
     private $_id;
 
     private $_reflector;
-    private $_storage;
+
+    protected $_saved;
+    protected $_persisted;
 
     private static $_connection;
 
     public function __construct()
     {
+        $this->_saved = false;
+        $this->_persisted = false;
+
         $this->_reflector = new \ReflectionObject($this);
         $inflector = new Inflector();
         $this->setTable($inflector->tableize($this->_reflector->getName()));
@@ -28,6 +33,15 @@ class Base extends AbstractStorage
         }
     }
 
+    public function save()
+    {
+        if (isset($this->_id)) {
+            $this->update();
+        } else {
+            $this->create();
+        }
+    }
+
     public function create($data = array())
     {
         if (empty($data)) {
@@ -35,7 +49,8 @@ class Base extends AbstractStorage
         }
         $data['created_at'] = time();
         $this->_id = parent::create($data);
-        $this->applyStorageData($data);
+        $this->updateAttributes($data);
+        $this->_saved = true;
     }
 
     public function find($value, $columnName = 'id')
@@ -44,7 +59,8 @@ class Base extends AbstractStorage
         if ($result === false) {
             return;
         }
-        $this->applyStorageData($result);
+        $this->updateAttributes($result);
+        $this->_persisted = true;
     }
 
     public function update($data = array())
@@ -55,7 +71,8 @@ class Base extends AbstractStorage
         $data['id'] = $this->_id;
         $data['updated_at'] = time();
         parent::update($data);
-        $this->applyStorageData($data);
+        $this->updateAttributes($data);
+        $this->_saved = true;
     }
 
     public function delete($id = 0)
@@ -82,7 +99,7 @@ class Base extends AbstractStorage
         return $data;
     }
 
-    private function applyStorageData($data)
+    public function updateAttributes($data)
     {
         $inflector = new Inflector();
         foreach ($data as $key => $value) {
@@ -117,5 +134,15 @@ class Base extends AbstractStorage
             throw new \Exception("Pdo object expected");
         }
         self::$_connection = $connection;
+    }
+
+    public function isSaved()
+    {
+        return $this->_saved;
+    }
+
+    public function isPersisted()
+    {
+        return $this->_persisted;
     }
 }
