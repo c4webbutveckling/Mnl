@@ -66,7 +66,7 @@ class Collection
         $objects = array();
         foreach ($result as $id) {
             $o = new $this->_className;
-            $o->find($id);
+            $o = call_user_func_array($this->_className."::find", array($id));
             $objects[] = $o;
         }
         return $objects;

@@ -4,17 +4,21 @@ abstract class AbstractStorage
 {
 
     protected $_tableName;
+    protected static $_connection;
+
     private $_primaryKey = 'id';
 
-    public function __construct($storageConnection)
+    public function __construct()
     {
-        $this->_connection = $storageConnection;
     }
 
-    public function find($value, $columnName = 'id')
+    public static function find($value, $columnName = 'id')
     {
-        $this->_primaryKey = $columnName;
-        $stmt = $this->_connection->prepare("SELECT * FROM " . $this->_tableName . " WHERE " . $columnName . " = :Value");
+        $reflector = new \ReflectionClass(get_called_class());
+        $inflector = new Inflector();
+        $tableName = $inflector->tableize($reflector->getName());
+
+        $stmt = self::$_connection->prepare("SELECT * FROM " . $tableName . " WHERE " . $columnName . " = :Value");
         $stmt->bindParam('Value', $value);
         $stmt->execute();
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -27,13 +31,13 @@ abstract class AbstractStorage
         foreach ($data as $column => $value) {
             $questionMarks[] = ':'.$column;
         }
-        $stmt = $this->_connection->prepare(
+        $stmt = self::$_connection->prepare(
             "INSERT INTO " . $this->_tableName . "(
                 " . implode(',', array_keys($data)) . ")
                 VALUES (" . implode(', ', $questionMarks). ")"
             );
         $stmt->execute($data);
-        return $this->_connection->lastInsertId();
+        return self::$_connection->lastInsertId();
     }
 
     public function update($data)
@@ -47,7 +51,7 @@ abstract class AbstractStorage
             $kvSets[] = $key.' = :'.$key;
             $values[] = $value;
         }
-        $stmt = $this->_connection->prepare(
+        $stmt = self::$_connection->prepare(
             "UPDATE " . $this->_tableName . " SET ".implode(',', $kvSets) . " WHERE " . $this->_primaryKey . " = :".$this->_primaryKey
         );
         $stmt->execute($data);
@@ -56,7 +60,7 @@ abstract class AbstractStorage
 
     public function delete($id)
     {
-        $stmt = $this->_connection->prepare("DELETE FROM " . $this->_tableName . " WHERE " . $this->_primaryKey . " = :Id");
+        $stmt = self::$_connection->prepare("DELETE FROM " . $this->_tableName . " WHERE " . $this->_primaryKey . " = :Id");
         $stmt->bindParam('Id', $id);
         $deleteResult = $stmt->execute();
         return $deleteResult;
@@ -64,7 +68,7 @@ abstract class AbstractStorage
 
     protected function getAvailableFields()
     {
-        $stmt = $this->_connection->prepare('SHOW COLUMNS FROM ' . $this->_tableName);
+        $stmt = self::$_connection->prepare('SHOW COLUMNS FROM ' . $this->_tableName);
         $stmt->execute();
         $columnData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $columnData;
@@ -83,5 +87,13 @@ abstract class AbstractStorage
     protected function setTable($tableName)
     {
         $this->_tableName = $tableName;
+    }
+
+    public static function setConnection($connection)
+    {
+        if (!is_a($connection, '\Pdo')) {
+            throw new \Exception("Pdo object expected");
+        }
+        self::$_connection = $connection;
     }
 }

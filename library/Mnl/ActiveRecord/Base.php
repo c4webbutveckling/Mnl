@@ -10,7 +10,6 @@ class Base extends AbstractStorage
     protected $_saved;
     protected $_persisted;
 
-    private static $_connection;
 
     public function __construct()
     {
@@ -53,14 +52,18 @@ class Base extends AbstractStorage
         $this->_saved = true;
     }
 
-    public function find($value, $columnName = 'id')
+    public static function find($value, $columnName = 'id')
     {
+        $reflector = new \ReflectionClass(get_called_class());
+        $className = $reflector->getName();
+
         $result = parent::find($value, $columnName);
         if ($result === false) {
             return;
         }
-        $this->updateAttributes($result);
-        $this->_persisted = true;
+        $object = new $className;
+        $object->updateAttributes($result);
+        return $object;
     }
 
     public function update($data = array())
@@ -133,7 +136,7 @@ class Base extends AbstractStorage
         if (!is_a($connection, '\Pdo')) {
             throw new \Exception("Pdo object expected");
         }
-        self::$_connection = $connection;
+        AbstractStorage::setConnection($connection);
     }
 
     public function isSaved()
