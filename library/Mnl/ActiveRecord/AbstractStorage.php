@@ -18,7 +18,7 @@ abstract class AbstractStorage
         $inflector = new Inflector();
         $tableName = $inflector->tableize($reflector->getName());
 
-        $stmt = self::$_connection->prepare("SELECT * FROM " . $tableName . " WHERE " . $columnName . " = :Value");
+        $stmt = self::$_connection->prepare("SELECT * FROM " . $tableName . " WHERE `" . $columnName . "` = :Value");
         $stmt->bindParam('Value', $value);
         $stmt->execute();
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -33,7 +33,7 @@ abstract class AbstractStorage
         }
         $stmt = self::$_connection->prepare(
             "INSERT INTO " . $this->_tableName . "(
-                " . implode(',', array_keys($data)) . ")
+                `" . implode('`, `', array_keys($data)) . "`)
                 VALUES (" . implode(', ', $questionMarks). ")"
             );
         $stmt->execute($data);
@@ -48,11 +48,11 @@ abstract class AbstractStorage
             if ($key == $this->_primaryKey) {
                 continue;
             }
-            $kvSets[] = $key.' = :'.$key;
+            $kvSets[] = "`".$key.'` = :'.$key;
             $values[] = $value;
         }
         $stmt = self::$_connection->prepare(
-            "UPDATE " . $this->_tableName . " SET ".implode(',', $kvSets) . " WHERE " . $this->_primaryKey . " = :".$this->_primaryKey
+            "UPDATE " . $this->_tableName . " SET ".implode(',', $kvSets) . " WHERE `" . $this->_primaryKey . "` = :".$this->_primaryKey
         );
         $stmt->execute($data);
 
@@ -60,7 +60,7 @@ abstract class AbstractStorage
 
     public function delete($id)
     {
-        $stmt = self::$_connection->prepare("DELETE FROM " . $this->_tableName . " WHERE " . $this->_primaryKey . " = :Id");
+        $stmt = self::$_connection->prepare("DELETE FROM " . $this->_tableName . " WHERE `" . $this->_primaryKey . "` = :Id");
         $stmt->bindParam('Id', $id);
         $deleteResult = $stmt->execute();
         return $deleteResult;
