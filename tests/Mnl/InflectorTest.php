@@ -43,6 +43,10 @@ class Mnl_InflectorTest extends PHPUnit_Framework_TestCase
             'testcases',
             $this->_inflector->pluralize('testcases')
         );
+        $this->assertEquals(
+            'statuses',
+            $this->_inflector->pluralize('status')
+        );
     }
 
     public function testTableize()

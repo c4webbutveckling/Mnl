@@ -38,7 +38,9 @@ class Inflector
 
     public function pluralize($input)
     {
-        if (preg_match('/.s$/', $input)) {
+        if (preg_match('/(alias|status)$/i', $input)) {
+            $input = preg_replace('/(alias|status)$/i', '\1es', $input);
+        } else if (preg_match('/.s$/', $input)) {
             return $input;
         } else if (preg_match('/([^aeiouy]|qu)y$/i', $input)) {
             $input = preg_replace('/([^aeiouy]|qu)y$/i', '\1ies', $input);
