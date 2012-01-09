@@ -62,6 +62,9 @@ abstract class Mnl_Crud
 
     public function set($key, $value = "")
     {
+        if ($key == "") {
+            return;
+        }
         if(is_array($key)) {
             foreach ($key as $k => $v) {
                 $this->$k = $v;
