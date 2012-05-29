@@ -44,9 +44,8 @@ class View
 
     public function fetch($file)
     {
-        foreach ($this->_vars as $key => $val) {
-            $$key = $val;
-        }
+        extract($this->_vars);
+
         ob_start();
         if (file_exists(Registry::getInstance()->templatePath.'/'.$file)) {
             include(Registry::getInstance()->templatePath.'/'.$file);
