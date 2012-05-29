@@ -11,10 +11,15 @@
 namespace Mnl;
 class View
 {
-    private $_vars = array();
+    private static $_templateDirectory;
+    private $_vars;
 
     public function __construct()
     {
+        if (self::$_templateDirectory == null) {
+            throw new Exception('Template directory not set');
+        }
+        $this->_vars = array();
     }
 
     public function __get($key)
@@ -47,8 +52,8 @@ class View
         extract($this->_vars);
 
         ob_start();
-        if (file_exists(Registry::getInstance()->templatePath.'/'.$file)) {
-            include(Registry::getInstance()->templatePath.'/'.$file);
+        if (file_exists(self::$_templateDirectory.'/'.$file)) {
+            include(self::$_templateDirectory.'/'.$file);
         } else {
             throw new Exception("View file `".$file."` not found");
         }
@@ -78,5 +83,12 @@ class View
             array($helper, 'run'),
             array($args)
         );
+    }
+
+    public static function setTemplateDirectory($path)
+    {
+        if (is_dir($path)) {
+            self::$_templateDirectory = $path;
+        }
     }
 }
