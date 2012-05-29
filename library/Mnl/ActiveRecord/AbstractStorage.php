@@ -22,6 +22,7 @@ abstract class AbstractStorage
         $stmt->bindParam('Value', $value);
         $stmt->execute();
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
         return $data;
     }
 
@@ -37,6 +38,7 @@ abstract class AbstractStorage
                 VALUES (" . implode(', ', $questionMarks). ")"
             );
         $stmt->execute($data);
+
         return self::$_connection->lastInsertId();
     }
 
@@ -63,6 +65,7 @@ abstract class AbstractStorage
         $stmt = self::$_connection->prepare("DELETE FROM " . $this->_tableName . " WHERE `" . $this->_primaryKey . "` = :Id");
         $stmt->bindParam('Id', $id);
         $deleteResult = $stmt->execute();
+
         return $deleteResult;
     }
 
@@ -71,6 +74,7 @@ abstract class AbstractStorage
         $stmt = self::$_connection->prepare('SHOW COLUMNS FROM ' . $this->_tableName);
         $stmt->execute();
         $columnData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
         return $columnData;
     }
 
@@ -81,6 +85,7 @@ abstract class AbstractStorage
         foreach ($columnData as $column) {
             $names[] = $column['Field'];
         }
+
         return $names;
     }
 

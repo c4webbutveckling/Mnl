@@ -21,6 +21,7 @@ class Partial extends \Mnl\View\HelperAbstract
         }
         $partial = new \Mnl\View();
         $partial->assign($data);
+
         return $partial->fetch($file);
     }
 }

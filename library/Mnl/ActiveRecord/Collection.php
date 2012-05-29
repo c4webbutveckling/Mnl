@@ -41,6 +41,7 @@ class Collection
     public function where($clauses)
     {
         $this->parseWhere($clauses);
+
         return $this;
     }
 
@@ -51,12 +52,14 @@ class Collection
             $order .= ' '.$direction;
         }
         $this->_order[] = $order;
+
         return $this;
     }
 
     public function limit($limit, $offset = 0)
     {
         $this->_limit = array($limit, $offset);
+
         return $this;
     }
 
@@ -69,6 +72,7 @@ class Collection
             $o = call_user_func_array($this->_className."::find", array($id));
             $objects[] = $o;
         }
+
         return $objects;
     }
 
@@ -97,6 +101,7 @@ class Collection
         $stmt->execute($query['params']);
         $this->_executed = true;
         $this->_queryResult = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
         return $this->_queryResult;
     }
 
@@ -122,6 +127,7 @@ class Collection
             $sql .= ' LIMIT ';
             $sql .= implode(',', array_reverse($this->_limit));
         }
+
         return array(
             'sql' => $sql,
             'params' => $params

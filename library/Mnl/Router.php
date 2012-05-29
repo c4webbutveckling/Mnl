@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
 * Router
 *
@@ -28,7 +28,7 @@ class Router
 
     private $routes;
 
-    function __construct()
+    public function __construct()
     {
     }
 
@@ -50,7 +50,7 @@ class Router
         $this->module = 'default';
 
         if(
-            isset($route['module']) 
+            isset($route['module'])
             && in_array($route['module'], array_keys($this->controllerPaths))
         ) {
             $this->module = ucwords($route['module']);
@@ -142,7 +142,7 @@ class Router
             if (is_file($fullpath.$part.'_controller.php')) {
                 $controller = $part.'_controller';
                 array_shift($parts);
-                break; 
+                break;
             }
         }
 
@@ -170,6 +170,7 @@ class Router
             return false;
         }
         @close($f);
+
         return true;
     }
 

@@ -11,6 +11,7 @@ class Url
         if (preg_match('/^http(s)?:\/\//', $url)) {
             return false;
         }
+
         return true;
     }
 }

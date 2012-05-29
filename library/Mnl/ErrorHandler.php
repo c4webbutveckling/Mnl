@@ -3,18 +3,19 @@ namespace Mnl;
 class ErrorHandler
 {
     private static $instance;
-    
-    private function __construct() {
+
+    private function __construct()
+    {
         $this->registerHandlers();
     }
 
     public function getInstance()
     {
-        if(!self::$instance)
-		{
-			self::$instance = new self;
-		}
-		return self::$instance;	
+        if (!self::$instance) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
     }
 
     public function setErrorAction($type="dump", $args = array())
@@ -38,12 +39,12 @@ class ErrorHandler
                 break;
         }
     }
-    
+
     public static function registerHandlers()
     {
         set_exception_handler('Mnl\ErrorHandler::handleException');
     }
-    
+
     public static function handleException($exception)
     {
         $traceline = "#%s %s(%s): %s(%s)";
@@ -77,6 +78,6 @@ class ErrorHandler
         error_log($msg);
         self::getInstance()->message = $exception->getMessage();
         self::getInstance()->errorDump = $msg;
-        self::getInstance()->errorAction();        
+        self::getInstance()->errorAction();
     }
 }

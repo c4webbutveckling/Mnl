@@ -37,6 +37,7 @@ abstract class Mnl_Crud
         } else {
             $this->id = $table->insert($data);
         }
+
         return true;
     }
 
@@ -52,8 +53,9 @@ abstract class Mnl_Crud
             $columnName = $this::$hasOne[$key];
             $class->load($this->$columnName);
             $this->$key = $class;
+
             return $this->$key;
-        } else if (isset($this->$key)) {
+        } elseif (isset($this->$key)) {
             return $this->$key;
         } else {
             return null;
@@ -62,7 +64,7 @@ abstract class Mnl_Crud
 
     public function set($key, $value = "")
     {
-        if(is_array($key)) {
+        if (is_array($key)) {
             foreach ($key as $k => $v) {
                 $this->$k = $v;
             }
@@ -88,11 +90,12 @@ abstract class Mnl_Crud
         $table = new Mnl_Db_Table($class::$_table);
         $result = $table->fetchAll($where, $order, $limit, $offset);
         $collection = array();
-        foreach($result as $result) {
+        foreach ($result as $result) {
             $obj = new $class;
             $obj->load($result['id']);
             $collection[] = $obj;
         }
+
         return $collection;
     }
 
@@ -101,6 +104,7 @@ abstract class Mnl_Crud
         $class = get_called_class();
         $table = new Mnl_Db_Table($class::$_table);
         $result = count($table->fetchAll($where));
+
         return $result;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Mnl;
-class Mail {
+class Mail
+{
     public $boundaryId;
     public $fromAddress;
     public $replyToAddress;
@@ -19,7 +20,7 @@ class Mail {
         if (!isset($this->fromAddress)) {
             return false;
         }
-        if(!isset($this->replyToAddress) || $this->replyToAddress == '') {
+        if (!isset($this->replyToAddress) || $this->replyToAddress == '') {
             $this->replyToAddress = $this->fromAddress;
         }
         $headers = "From: ".$this->fromAddress."\r\nReply-To: ".$this->replyToAddress;
@@ -27,7 +28,7 @@ class Mail {
         $this->headers = $headers;
     }
 
-    public function setContent($text, $html = '') 
+    public function setContent($text, $html = '')
     {
         if ($text == '') {
             return false;
@@ -46,18 +47,20 @@ class Mail {
         $content .= "\r\n--alt-".$this->boundaryId."--"."\r\n";
 
         $this->mailContent = $content;
+
         return true;
     }
-    
+
     public function send($to, $from, $subject, $contentText, $contentHtml = '', $replyTo = '')
     {
         $this->fromAddress = $from;
         $this->replyToAddress = $replyTo;
         $this->setHeaders();
         $sent = false;
-        if($this->setContent($contentText, $contentHtml)) {
+        if ($this->setContent($contentText, $contentHtml)) {
             $sent = mail($to, $subject, $this->mailContent, $this->headers);
         }
+
         return $sent;
     }
 }

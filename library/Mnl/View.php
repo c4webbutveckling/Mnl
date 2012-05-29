@@ -40,7 +40,7 @@ class View
     {
         if (is_string($key)) {
             $this->_vars[$key] = $value;
-        } else if (is_array($key)) {
+        } elseif (is_array($key)) {
             foreach ($key as $k => $v) {
                 $this->_vars[$k] = $v;
             }
@@ -59,6 +59,7 @@ class View
         }
         $view = ob_get_contents();
         ob_end_clean();
+
         return $view;
     }
 
@@ -79,6 +80,7 @@ class View
     public function __call($name, $args)
     {
         $helper = View\Helper\Loader::load($name);
+
         return call_user_func_array(
             array($helper, 'run'),
             array($args)

@@ -17,6 +17,7 @@ class Inflector
         if ($firstLowerCase) {
             $output = lcfirst($output);
         }
+
         return $output;
     }
 
@@ -26,13 +27,14 @@ class Inflector
         for ($i = 0; $i < strlen($input); $i++) {
             if ($input[$i] == '_') {
                 continue;
-            } else if ($input[$i] === strtoupper($input[$i]) && $i > 0) {
+            } elseif ($input[$i] === strtoupper($input[$i]) && $i > 0) {
                 $underscored .= "_".$input[$i];
             } else {
                 $underscored .= $input[$i];
             }
         }
         $underscored = strtolower($underscored);
+
         return $underscored;
     }
 
@@ -40,19 +42,21 @@ class Inflector
     {
         if (preg_match('/(alias|status)$/i', $input)) {
             $input = preg_replace('/(alias|status)$/i', '\1es', $input);
-        } else if (preg_match('/.s$/', $input)) {
+        } elseif (preg_match('/.s$/', $input)) {
             return $input;
-        } else if (preg_match('/([^aeiouy]|qu)y$/i', $input)) {
+        } elseif (preg_match('/([^aeiouy]|qu)y$/i', $input)) {
             $input = preg_replace('/([^aeiouy]|qu)y$/i', '\1ies', $input);
         } else {
             $input = $input.'s';
         }
+
         return $input;
     }
 
     public function tableize($input)
     {
         $input = preg_replace('/[^A-Za-z0-9]/', '', $input);
+
         return $this->underscoreize($this->pluralize($input));
     }
 }

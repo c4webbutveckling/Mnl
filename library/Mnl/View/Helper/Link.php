@@ -13,14 +13,14 @@ namespace Mnl\View\Helper;
 
 class Link extends \Mnl\View\HelperAbstract
 {
-    
+
     public static function run($args)
     {
         $uri = $args[0];
         $content = $args[1];
 
         $newString = '<a href="'.$uri.'">'.$content.'</a>';
-        
+
         return $newString;
     }
 }

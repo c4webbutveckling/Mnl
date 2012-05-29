@@ -17,6 +17,7 @@ class Route
     public function setPattern($pattern)
     {
         $this->pattern = $pattern;
+
         return $this;
     }
 
@@ -28,6 +29,7 @@ class Route
     public function setTarget($target)
     {
         $this->target = $target;
+
         return $this;
     }
 
@@ -35,7 +37,6 @@ class Route
     {
         return $this->target;
     }
-
 
     public function parsePattern()
     {
@@ -51,7 +52,8 @@ class Route
     public function matches($uri)
     {
         $uri = trim($uri, '/');
-        return (bool)preg_match('#^'.$this->parsePattern().'$#', $uri);
+
+        return (bool) preg_match('#^'.$this->parsePattern().'$#', $uri);
     }
 
     public function getCompiledRoute($uri)
@@ -80,6 +82,7 @@ class Route
         if (isset($module)) {
             $compiledRoute['module'] = $module;
         }
+
         return $compiledRoute;
     }
 }

@@ -45,13 +45,12 @@ class Mnl_Log
             $this->_logDateFormat = $configuration['logDateFormat'];
         }
 
-
     }
 
     /**
      * Writes a string to logfile
-     * @param string $string String to write to log
-     * @return TRUE on success FALSE on error
+     * @param  string $string String to write to log
+     * @return TRUE   on success FALSE on error
      */
     public function write($string)
     {
@@ -63,6 +62,7 @@ class Mnl_Log
             }
             fwrite($fh, $string);
             fclose($fh);
+
             return true;
         } else {
             return false;

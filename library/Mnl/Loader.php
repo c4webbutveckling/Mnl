@@ -37,8 +37,10 @@ class Loader
     {
         if (is_dir($path) && !in_array($path, $this->_paths)) {
             $this->_paths[] = $path;
+
             return true;
         }
+
         return false;
     }
 

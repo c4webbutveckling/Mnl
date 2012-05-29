@@ -25,6 +25,7 @@ class Loader
         if (self::$instance == null) {
             self::$instance = new self;
         }
+
         return self::$instance;
     }
 
@@ -47,6 +48,7 @@ class Loader
                 "Error: No paths registered."
             );
         }
+
         return $this->helperPaths;
     }
 
@@ -59,6 +61,7 @@ class Loader
         foreach ($paths as $prefix => $path) {
             if (file_exists($path.$name.'.php')) {
                 require_once $path.$name.'.php';
+
                 return $prefix.$name;
             }
         }

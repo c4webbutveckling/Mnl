@@ -95,6 +95,7 @@ class Mnl_Db_Table
             $join .= implode(' AND ', $onArray);
             $sql .= $join." ";
         }
+
         return $sql;
     }
 
@@ -106,9 +107,9 @@ class Mnl_Db_Table
         $stmt->bindParam('Value', $value);
         $stmt->execute();
         $this->_statementError = $stmt->errorInfo();
+
         return $stmt->fetch();
     }
-
 
     public function insert($data)
     {
@@ -161,7 +162,7 @@ class Mnl_Db_Table
         $query = "UPDATE ".$this->_table." SET `".
            implode('` = ?, `', $cols)."` = ? WHERE ".
            implode(' = ? AND ', $whereCols)." = ?";
-        
+
         $stmt = $this->_dbAdapter->prepare($query);
 
         $valCounter = 0;
@@ -176,6 +177,7 @@ class Mnl_Db_Table
 
         $result = $stmt->execute();
         $this->_statementError = $stmt->errorInfo();
+
         return $result;
     }
 
@@ -202,14 +204,15 @@ class Mnl_Db_Table
         }
         $result = $stmt->execute();
         $this->_statementError = $stmt->errorInfo();
+
         return $result;
     }
-    
+
     public function getStatementErrorInfo()
     {
         return $this->_statementError;
     }
-    
+
     public function getPdoErrorInfo()
     {
         return $this->_pdoError;

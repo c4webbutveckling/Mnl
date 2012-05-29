@@ -24,6 +24,7 @@ class Layout
         if (self::$_instance == null) {
             self::$_instance = new self;
         }
+
         return self::$_instance;
     }
 
@@ -36,7 +37,7 @@ class Layout
     {
         if (is_string($key)) {
             $this->_vars[$key] = $value;
-        } else if (is_array($key)) {
+        } elseif (is_array($key)) {
             foreach ($key as $k => $v) {
                 $this->_vars[$k] = $v;
             }
@@ -55,10 +56,11 @@ class Layout
         $layout->assign($this->_vars);
         $layoutResult = $layout->fetch($file);
         $layoutResult = str_replace(
-            "{content}", 
-            $this->_viewContent, 
+            "{content}",
+            $this->_viewContent,
             $layoutResult
         );
+
         return $layoutResult;
     }
 

@@ -10,7 +10,7 @@
  */
 class Mnl_View_Helper_Truncate extends Mnl_View_Helper_Abstract
 {
-    
+
     public static function run($args)
     {
         $string = $args[0];
@@ -20,10 +20,10 @@ class Mnl_View_Helper_Truncate extends Mnl_View_Helper_Abstract
         } else {
             $padding = '';
         }
-        
+
         $newString = substr($string, 0, $length);
         $newString .= $padding;
-        
+
         return $newString;
     }
 }

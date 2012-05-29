@@ -19,7 +19,6 @@ class Controller
 
     protected $_view;
 
-
     protected $_params;
 
     private $_disableView = false;
@@ -28,12 +27,12 @@ class Controller
     {
         $this->_view = new View();
     }
-    
+
     public function setParams($params = null)
     {
         $this->_params = $params;
     }
-    
+
     public function deploy()
     {
         $view = '';
@@ -55,6 +54,7 @@ class Controller
                 if ($this->module != 'default') {
                     $viewFile = strtolower($this->module).'/'.$viewFile;
                 }
+
                 return $this->_view->display(
                     $viewFile,
                     $layoutFile
@@ -94,7 +94,7 @@ class Controller
     {
         $where = BASE_URL.$where;
         header('Location: '.$where);
-        exit(); 
+        exit();
     }
 
     public function setViewFile($viewFile)

@@ -10,7 +10,6 @@ class Base extends AbstractStorage
     protected $_saved;
     protected $_persisted;
 
-
     public function __construct()
     {
         $this->_saved = false;
@@ -63,6 +62,7 @@ class Base extends AbstractStorage
         }
         $object = new $className;
         $object->updateAttributes($result);
+
         return $object;
     }
 
@@ -99,6 +99,7 @@ class Base extends AbstractStorage
                 }
             }
         }
+
         return $data;
     }
 
@@ -122,6 +123,7 @@ class Base extends AbstractStorage
         $tableName = $inflector->tableize($reflector->getName());
         $className = $reflector->getName();
         $collection = new Collection(self::$_connection, $tableName, $className, $clauses);
+
         return $collection;
     }
 
@@ -129,7 +131,6 @@ class Base extends AbstractStorage
     {
         return self::where();
     }
-
 
     public static function setConnection($connection)
     {

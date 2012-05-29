@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Mnl_Registry
  *
@@ -13,11 +13,11 @@ class Registry
 {
     private static $_instance;
     private static $_variables;
-    
+
     private function __construct()
     {
     }
-    
+
     public function __get($varName)
     {
         if (isset(self::$_variables[$varName])) {
@@ -26,12 +26,12 @@ class Registry
             return false;
         }
     }
-    
+
     public function __set($varName, $value)
     {
         self::$_variables[$varName] = $value;
     }
-    
+
     public function set($varName, $value)
     {
         self::$_variables[$varName] = $value;
@@ -42,6 +42,7 @@ class Registry
         if (!self::$_instance) {
             self::$_instance = new self;
         }
+
         return self::$_instance;
     }
 }
