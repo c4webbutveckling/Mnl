@@ -8,11 +8,13 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
+
 namespace Mnl\View\Helper;
+
 class Loader
 {
-    private static $_instance = null;
-    private $_helperPaths = array();
+    private static $instance = null;
+    private $helperPaths = array();
 
     private function __construct()
     {
@@ -20,10 +22,10 @@ class Loader
 
     public static function getInstance()
     {
-        if (self::$_instance == null) {
-            self::$_instance = new self;
+        if (self::$instance == null) {
+            self::$instance = new self;
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
     public function registerHelperPath($prefix, $path)
@@ -33,19 +35,19 @@ class Loader
                 'Error: Path '.$path.' does not exist.'
             );
         }
-        if (!isset($this->_helperPaths[$prefix])) {
-            $this->_helperPaths[$prefix] = $path;
+        if (!isset($this->helperPaths[$prefix])) {
+            $this->helperPaths[$prefix] = $path;
         }
     }
 
     public function getHelperPaths()
     {
-        if (count($this->_helperPaths) == 0) {
+        if (count($this->helperPaths) == 0) {
             throw new Loader\Exception(
                 "Error: No paths registered."
             );
         }
-        return $this->_helperPaths;
+        return $this->helperPaths;
     }
 
     public static function load($name)
@@ -53,6 +55,7 @@ class Loader
         $name = ucwords($name);
         $instance = self::getInstance();
         $paths = $instance->getHelperPaths();
+
         foreach ($paths as $prefix => $path) {
             if (file_exists($path.$name.'.php')) {
                 require_once $path.$name.'.php';
