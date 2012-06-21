@@ -28,6 +28,18 @@ class FormHelper extends HelperAbstract
         return $this->parseInputField('password', $name, '', $attributes);
     }
 
+    public function textArea($name, $value = '', array $attributes = array())
+    {
+        $field = '<textarea ';
+        $field .= 'name="'.$name.'" ';
+        foreach ($attributes as $attribute => $attributeValue) {
+            $field .= $attribute.'="'.$attributeValue.'" ';
+        }
+        $field .= '>'."\n";
+        $field .= $value;
+        $field .= '</textarea>';
+        return $field;
+    }
     private function parseInputField($type, $name, $value, array $attributes)
     {
         $field = '<input ';
@@ -39,7 +51,7 @@ class FormHelper extends HelperAbstract
         foreach ($attributes as $attribute => $attributeValue) {
             $field .= $attribute.'="'.$attributeValue.'" ';
         }
-        $field .= '/>';
+        $field .= '/>'."\n";
 
         return $field;
     }
