@@ -1,5 +1,9 @@
 <?php
+
 namespace Mnl\ActiveRecord;
+
+use Mnl\Utilities;
+
 abstract class AbstractStorage
 {
 

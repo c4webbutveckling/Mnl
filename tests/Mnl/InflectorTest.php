@@ -5,7 +5,7 @@ class Mnl_InflectorTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->_inflector = new Mnl\ActiveRecord\Inflector();
+        $this->_inflector = new Mnl\Utilities\Inflector();
     }
 
     public function testCamelize()

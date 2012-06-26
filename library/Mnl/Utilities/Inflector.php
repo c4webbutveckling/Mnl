@@ -1,5 +1,5 @@
 <?php
-namespace Mnl\ActiveRecord;
+namespace Mnl\Utilities;
 class Inflector
 {
 

@@ -1,6 +1,8 @@
 <?php
 namespace Mnl\ActiveRecord;
 
+use Mnl\Utilities;
+
 class Base extends AbstractStorage
 {
     private $_id;
