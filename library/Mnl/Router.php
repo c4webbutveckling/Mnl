@@ -126,44 +126,6 @@ class Router
         }
     }
 
-    public function getController($controller, $file, $action, $args )
-    {
-        $route = $_GET['route'];
-        $route = trim($route, '/\\');
-        $parts = explode('/', $route);
-        $fullpath = 'application/';
-
-        foreach ($parts as $part) {
-            if (is_dir($fullpath.$part)) {
-                $fullpath .=$part."/";
-                array_shift($parts);
-            }
-
-            if (is_file($fullpath.$part.'_controller.php')) {
-                $controller = $part.'_controller';
-                array_shift($parts);
-                break;
-            }
-        }
-
-        //if (empty($controller)) {
-            //$controller = $this->registry->settings->DEFAULT_CONTROLLER;
-            //if (is_dir($fullpath.$controller)) {
-                //$fullpath .= $controller."/";
-            //}
-            //$controller .= '_controller';
-        //}
-
-        $file = $fullpath.$controller.'.php';
-
-        $action = array_shift($parts);
-        if (empty($action)) {
-            $action = 'index';
-        }
-
-        $args = $parts;
-    }
-
     public function isReadable($file)
     {
         if (!$f = @fopen($file, 'r', true)) {
