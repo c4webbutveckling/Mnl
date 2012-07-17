@@ -63,7 +63,7 @@ class View
         return $view;
     }
 
-    public function display($file, $layoutFile = 'layout.phtml')
+    public function render($file, $layoutFile = 'layout.phtml')
     {
         $layout = View\Layout::getLayout();
         if ($layout->isEnabled()) {
@@ -74,7 +74,7 @@ class View
         } else {
             $result = $this->fetch($file);
         }
-        echo $result;
+        return $result;
     }
 
     public function __call($name, $args)

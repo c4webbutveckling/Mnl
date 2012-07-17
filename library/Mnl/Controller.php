@@ -13,49 +13,54 @@ namespace Mnl;
 class Controller
 {
 
-    public $module;
-    private $_action;
-    private $_controller;
+    private $module;
+    private $action;
+    private $controller;
+    private $disableView;
 
-    protected $_view;
+    protected $view;
 
-    protected $_params;
+    protected $params;
 
-    private $_disableView = false;
+    protected $layoutFile;
 
     public function __construct()
     {
-        $this->_view = new View();
+        $this->view = new View();
+        $this->disableView = false;
     }
 
     public function setParams($params = null)
     {
-        $this->_params = $params;
+        $this->params = $params;
     }
 
     public function deploy()
     {
         $view = '';
-        $action = $this->_action;
+        $action = $this->action;
 
         $this->before();
-        call_user_func_array(array($this, $action), $this->_params);
+        call_user_func_array(array($this, $this->action), $this->params);
         $this->after();
-        if (isset($this->_layoutFile)) {
-            $layoutFile = $this->_layoutFile;
+
+        if (isset($this->layoutFile)) {
+            $layoutFile = $this->layoutFile;
         } else {
             $layoutFile = 'layout.phtml';
         }
-        if (!$this->_disableView) {
-            if (isset($this->_viewFile) && $this->_viewFile != '') {
-                return $this->_view->display($this->_viewFile, $layoutFile);
+        if (!$this->disableView) {
+            if (isset($this->viewFile) && $this->viewFile != '') {
+                return $this->view->render($this->viewFile, $layoutFile);
             } else {
-                $viewFile = strtolower($this->_controller).'/'.strtolower($this->_action).'.phtml';
+                $viewFile = $this->controller.'/'.$this->action.'.phtml';
                 if ($this->module != 'default') {
-                    $viewFile = strtolower($this->module).'/'.$viewFile;
+                    $viewFile = $this->module.'/'.$viewFile;
                 }
 
-                return $this->_view->display(
+                $viewFile = strtolower($viewFile);
+
+                return $this->view->render(
                     $viewFile,
                     $layoutFile
                 );
@@ -72,22 +77,22 @@ class Controller
 
     public function setAction($action)
     {
-        $this->_action = $action;
+        $this->action = $action;
     }
 
     public function getActionName()
     {
-        return $this->_action;
+        return $this->action;
     }
 
     public function setControllerName($controller)
     {
-        $this->_controller = $controller;
+        $this->controller = $controller;
     }
 
     public function getControllerName()
     {
-        return $this->_controller;
+        return $this->controller;
     }
 
     public function redirect($where)
@@ -99,17 +104,17 @@ class Controller
 
     public function setViewFile($viewFile)
     {
-        $this->_viewFile = $viewFile;
+        $this->viewFile = $viewFile;
     }
 
     protected function setLayoutFile($layoutFile)
     {
-        $this->_layoutFile = $layoutFile;
+        $this->layoutFile = $layoutFile;
     }
 
     protected function disableView()
     {
-        $this->_disableView = true;
+        $this->disableView = true;
     }
 
     /**
