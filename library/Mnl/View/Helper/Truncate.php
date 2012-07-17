@@ -8,7 +8,12 @@
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-class Mnl_View_Helper_Truncate extends Mnl_View_Helper_Abstract
+
+namespace Mnl\View\Helper;
+
+use Mnl\View\HelperAbstract;
+
+class Truncate extends HelperAbstract
 {
 
     public static function run($args)
