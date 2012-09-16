@@ -221,6 +221,14 @@ class Controller
     }
 
     /**
+     * Disable layout rendering
+     */
+    protected function disableLayout()
+    {
+        \Mnl\View\Layout::getLayout()->disable();
+    }
+
+    /**
      * Runs before action
      */
     public function before()
