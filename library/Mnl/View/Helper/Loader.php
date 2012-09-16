@@ -1,25 +1,51 @@
 <?php
 /**
- * Mnl_View_Helper_Loader
+ * Helper loader
  *
  * @category Mnl
- * @package  Mnl_View
+ * @package  Mnl\View
  * @author   Markus Nilsson <markus@mnilsson.se>
  * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
  * @link     http://mnilsson.se/Mnl
  */
-
 namespace Mnl\View\Helper;
 
+/**
+ * Class for loading helpers and managing different helper paths
+ *
+ * @category Mnl
+ * @package  Mnl\View
+ * @author   Markus Nilsson <markus@mnilsson.se>
+ * @license  http://www.opensource.org/licenses/mit-license.php MIT Licence
+ * @link     http://mnilsson.se/Mnl
+ */
 class Loader
 {
+    /**
+     * Holds the instance
+     *
+     * @var Loader $instance
+     */
     private static $instance = null;
+
+    /**
+     * Array of paths to helpers
+     * @var string[] $helperPaths
+     */
     private $helperPaths = array();
 
+    /**
+     * Private constructor
+     */
     private function __construct()
     {
     }
 
+    /**
+     * Get singleton object
+     *
+     * @return Loader
+     */
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -29,6 +55,12 @@ class Loader
         return self::$instance;
     }
 
+    /**
+     * Register a path for a helper namespace
+     *
+     * @param string $prefix Namespace of helpers
+     * @param string $path Path to helper files
+     */
     public function registerHelperPath($prefix, $path)
     {
         if (!file_exists($path)) {
@@ -41,6 +73,11 @@ class Loader
         }
     }
 
+    /**
+     * Get all registered helper paths
+     *
+     * @return array
+     */
     public function getHelperPaths()
     {
         if (count($this->helperPaths) == 0) {
@@ -52,6 +89,13 @@ class Loader
         return $this->helperPaths;
     }
 
+    /**
+     * Load a helper file
+     *
+     * @param string $name Name of the helper
+     * @return string|null Name of helper class
+     * @throws Loader\Exception If helper not found
+     */
     public static function load($name)
     {
         $name = ucwords($name);
@@ -71,3 +115,4 @@ class Loader
         );
     }
 }
+
