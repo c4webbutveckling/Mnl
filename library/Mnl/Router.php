@@ -17,6 +17,7 @@ class Router
 {
 
     private $controllerPaths;
+    private $namespaces;
 
     private $request;
 
@@ -49,7 +50,7 @@ class Router
 
         $this->module = 'default';
 
-        if(
+        if (
             isset($route['module'])
             && in_array($route['module'], array_keys($this->controllerPaths))
         ) {
@@ -75,6 +76,9 @@ class Router
     {
         $controllerFile = strtolower($this->controller).'_controller.php';
         $controllerClassName = $this->controller."Controller";
+        if (isset($this->namespaces['default'])) {
+            $controllerClassName = $this->namespaces['default'].'\\'.$controllerClassName;
+        }
 
         $action = $this->action;
 
@@ -96,17 +100,23 @@ class Router
             } else {
                 throw new \Mnl\Exception(
                     "Could not find controller: ".$controllerClassName
-                    );
+                );
             }
 
             if ($this->module != 'default') {
                 $controllerClassName = $this->module.'_'.$controllerClassName;
             }
 
-            if (!class_exists($controllerClassName)) {
+            if (
+                !class_exists($controllerClassName)
+                && !class_exists(str_replace($this->namespaces['default'].'\\', '', $controllerClassName))
+            ) {
                 throw new \Mnl\Exception(
                     "Could not find controller: ".$controllerClassName
-                    );
+                );
+            } elseif (!class_exists($controllerClassName)) {
+                $controllerClassName = str_replace($this->namespaces['default'].'\\', '', $controllerClassName);
+
             }
 
             $controller = new $controllerClassName();
@@ -142,6 +152,15 @@ class Router
             $this->controllerPaths = $directory;
         } else {
             $this->controllerPaths['default'] = $directory;
+        }
+    }
+
+    public function setControllerNamespace($namespace)
+    {
+        if (is_array($namespace)) {
+            $this->namespaces = $namespace;
+        } else {
+            $this->namespaces['default'] = $namespace;
         }
     }
 
