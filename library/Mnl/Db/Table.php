@@ -108,7 +108,7 @@ class Mnl_Db_Table
         $stmt->execute();
         $this->_statementError = $stmt->errorInfo();
 
-        return $stmt->fetch();
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     public function insert($data)
