@@ -68,7 +68,7 @@ abstract class Mnl_Crud
             foreach ($key as $k => $v) {
                 $this->$k = $v;
             }
-        } else {
+        } elseif ($key != ''){
             $this->$key = $value;
         }
     }
