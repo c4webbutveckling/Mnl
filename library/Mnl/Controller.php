@@ -97,9 +97,6 @@ class Controller
      */
     public function deploy()
     {
-        $view = '';
-        $action = $this->action;
-
         $this->before();
         call_user_func_array(array($this, $this->action), $this->params);
         $this->after();
@@ -232,11 +229,13 @@ class Controller
      * Runs before action
      */
     public function before()
-    {}
+    {
+    }
 
     /**
      * Runs after action
      */
     public function after()
-    {}
+    {
+    }
 }
