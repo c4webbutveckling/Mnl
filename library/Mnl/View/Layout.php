@@ -145,4 +145,3 @@ class Layout
         return $this->enabled;
     }
 }
-

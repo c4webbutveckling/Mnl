@@ -32,4 +32,3 @@ abstract class HelperAbstract implements HelperInterface
         return $args;
     }
 }
-

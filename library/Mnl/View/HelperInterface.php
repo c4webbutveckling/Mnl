@@ -29,4 +29,3 @@ interface HelperInterface
      */
     public static function run($args);
 }
-

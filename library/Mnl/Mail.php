@@ -1,5 +1,6 @@
 <?php
 namespace Mnl;
+
 class Mail
 {
     public $boundaryId;
@@ -35,13 +36,13 @@ class Mail
         }
         $content = "--alt-".$this->boundaryId."\r\n";
         $content .= 'Content-Type: text/plain; charset="iso-8859-1"'."\r\n";
-        $content .= 'Content-Transfer-Encoding: 7bit'."\r\n\r\n";;
+        $content .= 'Content-Transfer-Encoding: 7bit'."\r\n\r\n";
         $content .= $text;
 
         if ($html != '') {
             $content .= "\r\n--alt-".$this->boundaryId."\r\n";
-            $content .= 'Content-Type: text/html; charset="iso-8859-1"'."\r\n";;
-            $content .= 'Content-Transfer-Encoding: 7bit'."\r\n\r\n";;
+            $content .= 'Content-Type: text/html; charset="iso-8859-1"'."\r\n";
+            $content .= 'Content-Transfer-Encoding: 7bit'."\r\n\r\n";
             $content .= $html;
         }
         $content .= "\r\n--alt-".$this->boundaryId."--"."\r\n";

@@ -1,5 +1,6 @@
 <?php
 namespace Mnl\Utilities;
+
 class Inflector
 {
 
@@ -60,4 +61,3 @@ class Inflector
         return $this->underscoreize($this->pluralize($input));
     }
 }
-
