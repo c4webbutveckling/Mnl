@@ -45,7 +45,7 @@ class Router
         }
 
         if (!isset($route)) {
-            throw new Exception("No matching route found");
+            throw new Router\NoRouteFoundException("No matching route found");
         }
 
         $this->module = 'default';
