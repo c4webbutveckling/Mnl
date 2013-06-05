@@ -1,15 +1,18 @@
 <?php
 namespace Mnl;
+
 class ErrorHandler
 {
     private static $instance;
+    private $handlers;
 
     private function __construct()
     {
-        $this->registerHandlers();
+        $this->handlers = array();
+        $this->registerHandler();
     }
 
-    public function getInstance()
+    public static function getInstance()
     {
         if (!self::$instance) {
             self::$instance = new self;
@@ -18,66 +21,29 @@ class ErrorHandler
         return self::$instance;
     }
 
-    public function setErrorAction($type="dump", $args = array())
+    public function addExceptionHandler($exceptionName = "Exception", $handler = "Mnl\ErrorHandler\DefaultHandler")
     {
-        $this->errorAction = $type;
-        $this->errorActionArgs = $args;
-    }
-    public function errorAction()
-    {
-        switch ($this->errorAction) {
-            case 'redirect':
-                $_SESSION['error_message'] = $this->message;
-                $_SESSION['error_dump'] = $this->errorDump;
-                header('Location: '.$this->errorActionArgs['redirect_uri']);
-                die();
-                break;
-            case 'dump':
-                echo '<pre>'.$this->errorMessage.'</pre>';
-                break;
-            default:
-                break;
-        }
+        $this->handlers[$exceptionName] = $handler;
     }
 
-    public static function registerHandlers()
+    public static function registerHandler()
     {
         set_exception_handler('Mnl\ErrorHandler::handleException');
     }
 
+
     public static function handleException($exception)
     {
-        $traceline = "#%s %s(%s): %s(%s)";
-        $msg = "PHP Fatal error:  Uncaught exception '%s'\n\t\twith message: '%s' \n\t\tin %s:%s\nStack trace:\n%s\n  thrown in %s on line %s";
-
-        $trace = $exception->getTrace();
-
-         $result = array();
-        foreach ($trace as $key => $stackPoint) {
-            $result[] = sprintf(
-                $traceline,
-                $key,
-                $stackPoint['file'],
-                $stackPoint['line'],
-                $stackPoint['function'],
-                isset($stackPoint['args'])?implode(', ', $stackPoint['args']):''
-            );
+        $instance = self::getInstance();
+        foreach ($instance->handlers as $exceptionName => $handler) {
+            if (get_class($exception) == $exceptionName) {
+                $handler = new $handler;
+                return $handler->handle($exception);
+            }
         }
-        $result[] = '#' . ++$key . ' {main}';
 
-        $msg = sprintf(
-            $msg,
-            get_class($exception),
-            $exception->getMessage(),
-            $exception->getFile(),
-            $exception->getLine(),
-            implode("\n", $result),
-            $exception->getFile(),
-            $exception->getLine()
-        );
-        error_log($msg);
-        self::getInstance()->message = $exception->getMessage();
-        self::getInstance()->errorDump = $msg;
-        self::getInstance()->errorAction();
+        $defaultHandler = new ErrorHandler\DefaultHandler();
+        return $defaultHandler->handle($exception);
+
     }
 }

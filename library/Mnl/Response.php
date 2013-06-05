@@ -84,9 +84,20 @@ class Response
         return $this->content;
     }
 
+    public function setContent($content)
+    {
+        $this->content = $content;
+        return $this;
+    }
+
     public function getStatusCode()
     {
         return $this->statusCode;
+    }
+
+    public function getStatusString()
+    {
+        return sprintf("%s %s", $this->statusCode, $this->statusText);
     }
 
     public function sendHeaders()

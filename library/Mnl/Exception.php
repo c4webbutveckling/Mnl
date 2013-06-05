@@ -9,6 +9,7 @@
  * @link     http://mnilsson.se/Mnl
  */
 namespace Mnl;
+
 class Exception extends \Exception
 {
 }

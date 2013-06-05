@@ -65,16 +65,12 @@ class Router
 
     public function run($request)
     {
-        try {
-            if (strpos($request, '?') !== false) {
-                $request = substr($request, 0, strpos($request, '?'));
-            }
-            $this->request = $request;
-            $this->prepare();
-            return new Response($this->deployController(), "200");
-        } catch (\Mnl\Router\NoRouteFoundException $e) {
-            return new Response("", "404");
+        if (strpos($request, '?') !== false) {
+            $request = substr($request, 0, strpos($request, '?'));
         }
+        $this->request = $request;
+        $this->prepare();
+        return new Response($this->deployController(), "200");
     }
 
     public function deployController()
