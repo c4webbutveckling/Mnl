@@ -20,4 +20,12 @@ class RouteCollection implements \IteratorAggregate
         return $this->routes;
     }
 
+    public function getRouteByName($name)
+    {
+        if (isset($this->routes[$name])) {
+            return $this->routes[$name];
+        } else {
+            return new Route('', '');
+        }
+    }
 }

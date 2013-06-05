@@ -8,7 +8,7 @@ class Route
     private $parameters;
     private $target;
 
-    public function __construct($pattern, $target)
+    public function __construct($pattern = "", $target = "")
     {
         $this->setPattern($pattern);
         $this->setTarget($target);
@@ -84,5 +84,10 @@ class Route
         }
 
         return $compiledRoute;
+    }
+
+    public function getPath($params = array())
+    {
+        return $this->target;
     }
 }

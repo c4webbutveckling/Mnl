@@ -12,6 +12,7 @@
 namespace Mnl;
 
 use Mnl\Router\RouteCollection;
+use Mnl\Response;
 
 class Router
 {
@@ -64,12 +65,16 @@ class Router
 
     public function run($request)
     {
-        if (strpos($request, '?') !== false) {
-            $request = substr($request, 0, strpos($request, '?'));
+        try {
+            if (strpos($request, '?') !== false) {
+                $request = substr($request, 0, strpos($request, '?'));
+            }
+            $this->request = $request;
+            $this->prepare();
+            return new Response($this->deployController(), "200");
+        } catch (\Mnl\Router\NoRouteFoundException $e) {
+            return new Response("", "404");
         }
-        $this->request = $request;
-        $this->prepare();
-        $this->deployController();
     }
 
     public function deployController()
@@ -129,7 +134,7 @@ class Router
             $controller->setControllerName($this->controller);
             $controller->setAction($this->action);
 
-            echo $controller->deploy();
+            return $controller->deploy();
 
         } catch (\Mnl\Exception $e) {
             throw $e;
@@ -172,6 +177,11 @@ class Router
     public function setRoutes(RouteCollection $routeCollection)
     {
         $this->routes = $routeCollection;
+    }
+
+    public function setRequest($request)
+    {
+        $this->request = $request;
     }
 
     public static function isXmlHttpRequest()
