@@ -10,6 +10,7 @@ class ErrorHandler
     {
         $this->handlers = array();
         $this->registerHandler();
+        $this->setupDefaults();
     }
 
     public static function getInstance()
@@ -45,5 +46,18 @@ class ErrorHandler
         $defaultHandler = new ErrorHandler\DefaultHandler();
         return $defaultHandler->handle($exception);
 
+    }
+
+    private function setupDefaults()
+    {
+        $defaults = array(
+            "Mnl\Router\NoRouteFoundException" => "Mnl\ErrorHandler\DefaultRoutingErrorHandler",
+            "Mnl\Controller\ControllerNotFoundException" => "Mnl\ErrorHandler\DefaultRoutingErrorHandler",
+            "Mnl\Controller\ActionNotFoundException" => "Mnl\ErrorHandler\DefaultRoutingErrorHandler",
+        );
+
+        foreach ($defaults as $exception => $handler) {
+            $this->addExceptionHandler($exception, $handler);
+        }
     }
 }
