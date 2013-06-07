@@ -1,7 +1,7 @@
 <?php
 namespace Mnl\ErrorHandler;
 
-class DefaultNoRouteFoundHandler implements HandlerInterface
+class DefaultRoutingErrorHandler implements HandlerInterface
 {
     public function handle($exception)
     {

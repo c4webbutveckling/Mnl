@@ -99,7 +99,7 @@ class Router
                     '/'.$controllerFile
                     );
             } else {
-                throw new \Mnl\Exception(
+                throw new \Mnl\Controller\ControllerNotFoundException(
                     "Could not find controller: ".$controllerClassName
                 );
             }
@@ -112,7 +112,7 @@ class Router
                 !class_exists($controllerClassName)
                 && !class_exists(str_replace($this->namespaces['default'].'\\', '', $controllerClassName))
             ) {
-                throw new \Mnl\Exception(
+                throw new \Mnl\Controller\ControllerNotFoundException(
                     "Could not find controller: ".$controllerClassName
                 );
             } elseif (!class_exists($controllerClassName)) {
@@ -124,7 +124,7 @@ class Router
             $controller->setParams($this->params);
 
             if (!is_callable(array($controller,$action))) {
-                throw(new \Mnl\Exception("Could not find action: ".$action));
+                throw(new \Mnl\Controller\ActionNotFoundException("Could not find action: ".$action));
             }
             $controller->setModule($this->module);
             $controller->setControllerName($this->controller);

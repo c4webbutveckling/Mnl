@@ -19,11 +19,4 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router->setRequest("/no_route_to_this");
         $router->prepare();
     }
-
-    public function test404StatusWhenNoRouteFound()
-    {
-        $router = new Mnl\Router();
-        $response = $router->run("/no_route_to_this");
-        $this->assertEquals(404, $response->getStatusCode());
-    }
 }
