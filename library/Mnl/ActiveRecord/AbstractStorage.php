@@ -2,7 +2,7 @@
 
 namespace Mnl\ActiveRecord;
 
-use Mnl\Utilities;
+use Mnl\Utilities\Inflector;
 
 abstract class AbstractStorage
 {

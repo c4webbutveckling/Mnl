@@ -1,7 +1,7 @@
 <?php
 namespace Mnl\ActiveRecord;
 
-use Mnl\Utilities;
+use Mnl\Utilities\Inflector;
 
 class Base extends AbstractStorage
 {
