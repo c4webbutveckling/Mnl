@@ -47,7 +47,7 @@ class Collection
 
     public function order($by, $direction = '')
     {
-        $order = $by;
+        $order = '`' . $by . '`';
         if ($direction != '') {
             $order .= ' '.$direction;
         }
