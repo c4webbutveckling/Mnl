@@ -82,6 +82,11 @@ class Collection
         return $this->getObjects();
     }
 
+    public function toCollection()
+    {
+        return collect($this->getObjects());
+    }
+
     public function first()
     {
         $objects = $this->getObjects();
