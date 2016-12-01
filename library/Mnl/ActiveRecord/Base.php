@@ -80,9 +80,9 @@ class Base extends AbstractStorage
         $this->_saved = true;
     }
 
-    public function delete($id = 0)
+    public function delete()
     {
-        parent::delete($this->_id);
+        parent::delete();
     }
     private function getStoreableData()
     {

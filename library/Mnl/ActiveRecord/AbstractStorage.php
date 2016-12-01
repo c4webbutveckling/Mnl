@@ -8,6 +8,7 @@ abstract class AbstractStorage
 {
 
     protected $_tableName;
+    protected $_id;
     protected static $_connection;
 
     private $_primaryKey = 'id';
@@ -64,10 +65,10 @@ abstract class AbstractStorage
 
     }
 
-    public function delete($id)
+    public function delete()
     {
         $stmt = self::$_connection->prepare("DELETE FROM " . $this->_tableName . " WHERE `" . $this->_primaryKey . "` = :Id");
-        $stmt->bindParam('Id', $id);
+        $stmt->bindParam('Id', $this->_id);
         $deleteResult = $stmt->execute();
 
         return $deleteResult;
