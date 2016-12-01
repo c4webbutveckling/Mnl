@@ -65,12 +65,13 @@ class Collection
 
     public function getObjects()
     {
-        $result = $this->execute();
+        $reflectionClass = new \ReflectionClass($this->_className);
+        $results = $this->execute();
         $objects = array();
-        foreach ($result as $id) {
-            $o = new $this->_className;
-            $o = call_user_func_array($this->_className."::find", array($id));
-            $objects[] = $o;
+        foreach ($results as $result) {
+            $object = $reflectionClass->newInstance();
+            $object->updateAttributes($result);
+            $objects[] = $object;
         }
 
         return $objects;
@@ -100,21 +101,26 @@ class Collection
         $stmt = $this->_connection->prepare($query['sql']);
         $stmt->execute($query['params']);
         $this->_executed = true;
-        $this->_queryResult = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
+        $this->_queryResult = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $this->_queryResult;
     }
 
     protected function buildQuery()
     {
-        $sql = "SELECT id FROM " . $this->_tableName;
+        $sql = "SELECT * FROM " . $this->_tableName;
         $params = array();
         if (!empty($this->_clauses)) {
             $sql .= " WHERE ";
             $clauses = array();
             foreach ($this->_clauses as $clause) {
-                $clauses[] = $clause['column'] . " " . $clause['op'] . " :" . $clause['column'];
-                $params[$clause['column']] = $clause['value'];
+
+                if($clause['op'] == 'IS') {
+                    $clauses[] = '`'.$clause['column'] . "` " . $clause['op']." ".$clause['value'];
+                } else {
+                    $clauses[] = '`'.$clause['column'] . "` " . $clause['op'] . " :" . $clause['column'];
+                    $params[$clause['column']] = $clause['value'];
+                }
             }
             $sql .= implode(' AND ', $clauses);
         }
