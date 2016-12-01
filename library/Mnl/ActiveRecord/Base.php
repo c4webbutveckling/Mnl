@@ -5,8 +5,6 @@ use Mnl\Utilities;
 
 class Base extends AbstractStorage
 {
-    private $_id;
-
     private $_reflector;
 
     protected $_saved;
