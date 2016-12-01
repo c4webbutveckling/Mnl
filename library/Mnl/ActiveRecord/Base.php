@@ -5,8 +5,6 @@ use Mnl\Utilities;
 
 class Base extends AbstractStorage
 {
-    private $_reflector;
-
     protected $_saved;
     protected $_persisted;
 
@@ -15,13 +13,13 @@ class Base extends AbstractStorage
         $this->_saved = false;
         $this->_persisted = false;
 
-        $this->_reflector = new \ReflectionObject($this);
         if (!isset(self::$_connection)) {
             throw new \Exception("Database Connection not set");
         }
         if (!static::$tableName) {
+            $reflector = new \ReflectionClass(get_called_class());
             $inflector = new Inflector();
-            $tableName = $inflector->tableize($this->_reflector->getName());
+            $tableName = $inflector->tableize($reflector->getName());
         } else {
             $tableName = static::$tableName;
         }
@@ -90,7 +88,8 @@ class Base extends AbstractStorage
     }
     private function getStoreableData()
     {
-        $properties = $this->_reflector->getProperties(
+        $reflector = new \ReflectionObject($this);
+        $properties = $reflector->getProperties(
             \ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED
         );
         $inflector = new Inflector();
