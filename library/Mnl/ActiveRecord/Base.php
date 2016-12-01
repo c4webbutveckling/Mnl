@@ -49,7 +49,9 @@ class Base extends AbstractStorage
         if (empty($data)) {
             $data = $this->getStoreableData();
         }
-        $data['created_at'] = time();
+        if(!isset($data['created_at'])){
+            $data['created_at'] = time();
+        }
         $this->_id = parent::create($data);
         $this->updateAttributes($data);
         $this->_saved = true;
