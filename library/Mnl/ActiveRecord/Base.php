@@ -16,11 +16,17 @@ class Base extends AbstractStorage
         $this->_persisted = false;
 
         $this->_reflector = new \ReflectionObject($this);
-        $inflector = new Inflector();
-        $this->setTable($inflector->tableize($this->_reflector->getName()));
         if (!isset(self::$_connection)) {
             throw new \Exception("Database Connection not set");
         }
+        if (!static::$tableName) {
+            $inflector = new Inflector();
+            $tableName = $inflector->tableize($this->_reflector->getName());
+        } else {
+            $tableName = static::$tableName;
+        }
+        $this->setTable($tableName);
+
         parent::__construct(self::$_connection);
     }
 
@@ -119,8 +125,12 @@ class Base extends AbstractStorage
     public static function where($clauses = array())
     {
         $reflector = new \ReflectionClass(get_called_class());
-        $inflector = new Inflector();
-        $tableName = $inflector->tableize($reflector->getName());
+        if (!static::$tableName) {
+            $inflector = new Inflector();
+            $tableName = $inflector->tableize($reflector->getName());
+        } else {
+            $tableName = static::$tableName;
+        }
         $className = $reflector->getName();
         $collection = new Collection(self::$_connection, $tableName, $className, $clauses);
 

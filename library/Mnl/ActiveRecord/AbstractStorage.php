@@ -7,8 +7,8 @@ use Mnl\Utilities;
 abstract class AbstractStorage
 {
 
-    protected $_tableName;
     protected $_id;
+    protected static $tableName;
     protected static $_connection;
 
     private $_primaryKey = 'id';
@@ -19,9 +19,13 @@ abstract class AbstractStorage
 
     public static function find($value, $columnName = 'id')
     {
-        $reflector = new \ReflectionClass(get_called_class());
-        $inflector = new Inflector();
-        $tableName = $inflector->tableize($reflector->getName());
+        if (!static::$tableName) {
+            $reflector = new \ReflectionClass(get_called_class());
+            $inflector = new Inflector();
+            $tableName = $inflector->tableize($reflector->getName());
+        } else {
+            $tableName = static::$tableName;
+        }
 
         $stmt = self::$_connection->prepare("SELECT * FROM " . $tableName . " WHERE `" . $columnName . "` = :Value");
         $stmt->bindParam('Value', $value);
