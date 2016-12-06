@@ -25,7 +25,7 @@ class View
      * Directory containing templates
      * @var string $templateDirectory
      */
-    private static $templateDirectory;
+    protected static $templateDirectory;
 
     /**
      * Array containgin assigned variables
