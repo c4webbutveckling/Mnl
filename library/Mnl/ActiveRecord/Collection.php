@@ -122,6 +122,8 @@ class Collection
 
                 if($clause['op'] == 'IS') {
                     $clauses[] = '`'.$clause['column'] . "` " . $clause['op']." ".$clause['value'];
+                } elseif ($clause['op'] == 'IN') {
+                    $clauses[] = '`'.$clause['column'] . "` IN(" . implode(',', $clause['value']).")";
                 } else {
                     $clauses[] = '`'.$clause['column'] . "` " . $clause['op'] . " :" . $clause['column'];
                     $params[$clause['column']] = $clause['value'];
