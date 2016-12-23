@@ -72,6 +72,21 @@ class Base extends AbstractStorage
         return $object;
     }
 
+    public static function latest($columnName = 'id')
+    {
+        $reflector = new \ReflectionClass(get_called_class());
+        $className = $reflector->getName();
+
+        $result = parent::latest($columnName);
+        if ($result === false) {
+            return;
+        }
+        $object = new $className;
+        $object->updateAttributes($result);
+
+        return $object;
+    }
+
     public function update($data = array())
     {
         if (empty($data)) {
