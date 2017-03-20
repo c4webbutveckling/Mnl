@@ -35,6 +35,23 @@ abstract class AbstractStorage
         return $data;
     }
 
+    public static function latest($columnName = 'id')
+    {
+        if (!static::$tableName) {
+            $reflector = new \ReflectionClass(get_called_class());
+            $inflector = new Inflector();
+            $tableName = $inflector->tableize($reflector->getName());
+        } else {
+            $tableName = static::$tableName;
+        }
+
+        $stmt = self::$_connection->prepare("SELECT * FROM " . $tableName . " ORDER BY `" . $columnName . "` DESC LIMIT 1");
+        $stmt->execute();
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $data;
+    }
+
     public function create($data)
     {
         $questionMarks = array();
