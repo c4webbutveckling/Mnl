@@ -87,6 +87,11 @@ class Collection
         return collect($this->getObjects());
     }
 
+    public function count()
+    {
+        return count($this->execute());
+    }
+
     public function first()
     {
         $objects = $this->getObjects();
