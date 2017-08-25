@@ -136,6 +136,9 @@ class Base extends AbstractStorage
                 $this->$key = $value;
             }
         }
+
+        return $this;
+        
     }
 
     public static function where($clauses = array())
