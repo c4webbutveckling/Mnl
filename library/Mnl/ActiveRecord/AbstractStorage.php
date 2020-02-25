@@ -2,6 +2,7 @@
 
 namespace Mnl\ActiveRecord;
 
+use Illuminate\Support\Facades\DB;
 use Mnl\Utilities\Inflector;
 
 abstract class AbstractStorage
@@ -9,13 +10,8 @@ abstract class AbstractStorage
 
     protected $_id;
     protected static $tableName;
-    protected static $_connection;
 
     private $_primaryKey = 'id';
-
-    public function __construct()
-    {
-    }
 
     public static function find($value, $columnName = 'id')
     {
@@ -27,12 +23,14 @@ abstract class AbstractStorage
             $tableName = static::$tableName;
         }
 
-        $stmt = self::$_connection->prepare("SELECT * FROM " . $tableName . " WHERE `" . $columnName . "` = :Value");
-        $stmt->bindParam('Value', $value);
-        $stmt->execute();
-        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $data = DB::table($tableName)
+            ->where($columnName, $value)
+            ->first();
+        if (!is_null($data)) {
+            return (array) $data;
+        }
 
-        return $data;
+        return null;
     }
 
     public static function latest($columnName = 'id')
@@ -45,63 +43,43 @@ abstract class AbstractStorage
             $tableName = static::$tableName;
         }
 
-        $stmt = self::$_connection->prepare("SELECT * FROM " . $tableName . " ORDER BY `" . $columnName . "` DESC LIMIT 1");
-        $stmt->execute();
-        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $data = DB::table($tableName)
+            ->orderByDesc($columnName)
+            ->first();
+        if (!is_null($data)) {
+            return (array) $data;
+        }
 
-        return $data;
+        return null;
     }
 
     public function create($data)
     {
-        $questionMarks = array();
-        foreach ($data as $column => $value) {
-            $questionMarks[] = ':'.$column;
-        }
-        $stmt = self::$_connection->prepare(
-            "INSERT INTO " . $this->_tableName . "(
-                `" . implode('`, `', array_keys($data)) . "`)
-                VALUES (" . implode(', ', $questionMarks). ")"
-            );
-        $stmt->execute($data);
-
-        return self::$_connection->lastInsertId();
+        return DB::table($this->_tableName)
+            ->insertGetId([
+                $data
+            ]);
     }
 
     public function update($data)
     {
-        $kvSets = array();
-        $values = array();
-        foreach ($data as $key => $value) {
-            if ($key == $this->_primaryKey) {
-                continue;
-            }
-            $kvSets[] = "`".$key.'` = :'.$key;
-            $values[] = $value;
-        }
-        $stmt = self::$_connection->prepare(
-            "UPDATE " . $this->_tableName . " SET ".implode(',', $kvSets) . " WHERE `" . $this->_primaryKey . "` = :".$this->_primaryKey
-        );
-        $stmt->execute($data);
-
+        DB::table($this->_tableName)
+            ->where($this->_primaryKey, $this->_id)
+            ->update([
+                $data
+            ]);
     }
 
     public function delete()
     {
-        $stmt = self::$_connection->prepare("DELETE FROM " . $this->_tableName . " WHERE `" . $this->_primaryKey . "` = :Id");
-        $stmt->bindParam('Id', $this->_id);
-        $deleteResult = $stmt->execute();
-
-        return $deleteResult;
+        return DB::table($this->_tableName)
+            ->where($this->_primaryKey, $this->_id)
+            ->delete();
     }
 
     protected function getAvailableFields()
     {
-        $stmt = self::$_connection->prepare('SHOW COLUMNS FROM ' . $this->_tableName);
-        $stmt->execute();
-        $columnData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        return $columnData;
+        return DB::statement('SHOW COLUMNS FROM ' . $this->_tableName);
     }
 
     public function getAvailableFieldNames()
@@ -109,7 +87,7 @@ abstract class AbstractStorage
         $columnData = $this->getAvailableFields();
         $names = array();
         foreach ($columnData as $column) {
-            $names[] = $column['Field'];
+            $names[] = $column->Field;
         }
 
         return $names;
@@ -118,13 +96,5 @@ abstract class AbstractStorage
     protected function setTable($tableName)
     {
         $this->_tableName = $tableName;
-    }
-
-    public static function setConnection($connection)
-    {
-        if (!is_a($connection, '\Pdo')) {
-            throw new \Exception("Pdo object expected");
-        }
-        self::$_connection = $connection;
     }
 }
