@@ -52,18 +52,14 @@ abstract class AbstractStorage
     public function create($data)
     {
         return DB::table($this->_tableName)
-            ->insertGetId([
-                $data
-            ]);
+            ->insertGetId($data);
     }
 
     public function update($data)
     {
         DB::table($this->_tableName)
             ->where($this->_primaryKey, $this->_id)
-            ->update([
-                $data
-            ]);
+            ->update($data);
     }
 
     public function delete()
