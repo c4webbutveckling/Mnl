@@ -28,11 +28,7 @@ class Collection
             $column = $key[0];
 
             if ($op == 'IS') {
-                if ($value == 'null') {
-                    $this->_query->whereNull($column);
-                } else {
-                    $this->_query->whereNotNull($column);
-                }
+                $this->_query->where($column, 'IS', $value);
             } elseif ($op == 'IN') {
                 $this->_query->whereIn($column, $value);
             } else {
