@@ -13,9 +13,6 @@ class Base extends AbstractStorage
         $this->_saved = false;
         $this->_persisted = false;
 
-        if (!isset(self::$_connection)) {
-            throw new \Exception("Database Connection not set");
-        }
         if (!static::$tableName) {
             $reflector = new \ReflectionClass(get_called_class());
             $inflector = new Inflector();
@@ -24,8 +21,6 @@ class Base extends AbstractStorage
             $tableName = static::$tableName;
         }
         $this->setTable($tableName);
-
-        parent::__construct(self::$_connection);
     }
 
     public function __get($name)
@@ -138,7 +133,6 @@ class Base extends AbstractStorage
         }
 
         return $this;
-        
     }
 
     public static function where($clauses = array())
@@ -151,7 +145,7 @@ class Base extends AbstractStorage
             $tableName = static::$tableName;
         }
         $className = $reflector->getName();
-        $collection = new Collection(self::$_connection, $tableName, $className, $clauses);
+        $collection = new Collection($tableName, $className, $clauses);
 
         return $collection;
     }
@@ -159,14 +153,6 @@ class Base extends AbstractStorage
     public static function all()
     {
         return self::where();
-    }
-
-    public static function setConnection($connection)
-    {
-        if (!is_a($connection, '\Pdo')) {
-            throw new \Exception("Pdo object expected");
-        }
-        AbstractStorage::setConnection($connection);
     }
 
     public function isSaved()
