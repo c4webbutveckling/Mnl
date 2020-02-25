@@ -1,21 +1,25 @@
 <?php
 namespace Mnl\ActiveRecord;
-
-use Illuminate\Support\Facades\DB;
-
 class Collection
 {
+    protected $_connection;
     protected $_tableName;
     protected $_className;
-    protected $_query;
+    protected $_clauses;
+    protected $_order;
+    protected $_limit;
+
     protected $_executed;
 
-    public function __construct($tableName, $className, $clauses)
+    public function __construct($connection, $tableName, $className, $clauses)
     {
         $this->_executed = false;
+        $this->_clauses = array();
+        $this->_order = array();
+        $this->_limit = array();
+        $this->_connection = $connection;
         $this->_tableName = $tableName;
         $this->_className = $className;
-        $this->_query = DB::table($this->_tableName);
 
         $this->parseWhere($clauses);
     }
@@ -25,19 +29,12 @@ class Collection
         foreach ($clauses as $key => $value) {
             $key = explode(' ', $key);
             $op = $key[1];
-            $column = $key[0];
-
-            if ($op == 'IS') {
-                if ($value == 'null') {
-                    $this->_query->whereNull($column);
-                } else {
-                    $this->_query->whereNotNull($column);
-                }
-            } elseif ($op == 'IN') {
-                $this->_query->whereIn($column, $value);
-            } else {
-                $this->_query->where($column, $op, $value);
-            }
+            $key = $key[0];
+            $this->_clauses[] = array(
+                'column' => $key,
+                'op' => $op,
+                'value' => $value
+            );
         }
     }
 
@@ -48,17 +45,20 @@ class Collection
         return $this;
     }
 
-    public function order($by, $direction = 'asc')
+    public function order($by, $direction = '')
     {
-        $this->_query->orderBy($by, $direction);
+        $order = '`' . $by . '`';
+        if ($direction != '') {
+            $order .= ' '.$direction;
+        }
+        $this->_order[] = $order;
 
         return $this;
     }
 
     public function limit($limit, $offset = 0)
     {
-        $this->_query->limit($limit);
-        $this->_query->offset($offset);
+        $this->_limit = array($limit, $offset);
 
         return $this;
     }
@@ -66,48 +66,40 @@ class Collection
     public function getObjects()
     {
         $reflectionClass = new \ReflectionClass($this->_className);
+        $results = $this->execute();
+        $objects = array();
+        foreach ($results as $result) {
+            $object = $reflectionClass->newInstance();
+            $object->updateAttributes($result);
+            $objects[] = $object;
+        }
 
-        return $this->execute()
-            ->map(function($result) use ($reflectionClass) {
-                $object = $reflectionClass->newInstance();
-                $object->updateAttributes((array) $result);
-                return $object;
-            });
+        return $objects;
     }
 
     public function toArray()
     {
-        return $this->getObjects()->toArray();
+        return $this->getObjects();
     }
 
     public function toCollection()
     {
-        return $this->getObjects();
+        return collect($this->getObjects());
     }
 
     public function count()
     {
-        return $this->_query->count();
+        return count($this->execute());
     }
 
     public function first()
     {
-        if ($this->_executed) {
-            return $this->_queryResult;
-        }
-
-        $result = $this->_query->first();
-        if (is_null($result)) {
-            $this->_queryResult = null;
+        $objects = $this->getObjects();
+        if (count($objects) != 0) {
+            return array_pop($objects);
         } else {
-            $reflectionClass = new \ReflectionClass($this->_className);
-            $object = $reflectionClass->newInstance();
-            $object->updateAttributes((array) $result);
-            $this->_queryResult = $object;
+            return null;
         }
-        $this->_executed = true;
-
-        return $this->_queryResult;
     }
 
     protected function execute()
@@ -115,8 +107,48 @@ class Collection
         if ($this->_executed) {
             return $this->_queryResult;
         }
-        $this->_queryResult = $this->_query->get();
+        $query = $this->buildQuery();
+        $stmt = $this->_connection->prepare($query['sql']);
+        $stmt->execute($query['params']);
         $this->_executed = true;
+
+        $this->_queryResult = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $this->_queryResult;
+    }
+
+    protected function buildQuery()
+    {
+        $sql = "SELECT * FROM " . $this->_tableName;
+        $params = array();
+        if (!empty($this->_clauses)) {
+            $sql .= " WHERE ";
+            $clauses = array();
+            foreach ($this->_clauses as $clause) {
+
+                if($clause['op'] == 'IS') {
+                    $clauses[] = '`'.$clause['column'] . "` " . $clause['op']." ".$clause['value'];
+                } elseif ($clause['op'] == 'IN') {
+                    $clauses[] = '`'.$clause['column'] . "` IN(" . implode(',', $clause['value']).")";
+                } else {
+                    $clauses[] = '`'.$clause['column'] . "` " . $clause['op'] . " :" . $clause['column'];
+                    $params[$clause['column']] = $clause['value'];
+                }
+            }
+            $sql .= implode(' AND ', $clauses);
+        }
+
+        if (!empty($this->_order)) {
+            $sql .= ' ORDER BY ';
+            $sql .= implode(',', $this->_order);
+        }
+        if (!empty($this->_limit)) {
+            $sql .= ' LIMIT ';
+            $sql .= implode(',', array_reverse($this->_limit));
+        }
+
+        return array(
+            'sql' => $sql,
+            'params' => $params
+        );
     }
 }
