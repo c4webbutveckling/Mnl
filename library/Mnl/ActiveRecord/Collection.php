@@ -1,6 +1,7 @@
 <?php
 namespace Mnl\ActiveRecord;
 
+use Closure;
 use Illuminate\Support\Facades\DB;
 
 class Collection
@@ -35,6 +36,13 @@ class Collection
                 $this->_query->where($column, $op, $value);
             }
         }
+    }
+
+    public function raw(Closure $callback)
+    {
+        $callback($this->_query);
+
+        return $this;
     }
 
     public function where($clauses)
