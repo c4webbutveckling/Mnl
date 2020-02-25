@@ -75,7 +75,7 @@ abstract class AbstractStorage
 
     protected function getAvailableFields()
     {
-        return DB::statement('SHOW COLUMNS FROM ' . $this->_tableName);
+        return DB::select('SHOW COLUMNS FROM ' . $this->_tableName);
     }
 
     public function getAvailableFieldNames()
