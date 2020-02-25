@@ -13,15 +13,17 @@ abstract class AbstractStorage
 
     private $_primaryKey = 'id';
 
-    public static function find($value, $columnName = 'id')
+    public static function getTableName()
     {
         if (!static::$tableName) {
-            $reflector = new \ReflectionClass(get_called_class());
-            $inflector = new Inflector();
-            $tableName = $inflector->tableize($reflector->getName());
-        } else {
-            $tableName = static::$tableName;
+            return app(Inflector::class)->tableize(get_called_class());
         }
+        return static::$tableName;
+    }
+
+    public static function find($value, $columnName = 'id')
+    {
+        $tableName = static::$tableName ?? static::getTableName();
 
         $data = DB::table($tableName)
             ->where($columnName, $value)
@@ -35,13 +37,7 @@ abstract class AbstractStorage
 
     public static function latest($columnName = 'id')
     {
-        if (!static::$tableName) {
-            $reflector = new \ReflectionClass(get_called_class());
-            $inflector = new Inflector();
-            $tableName = $inflector->tableize($reflector->getName());
-        } else {
-            $tableName = static::$tableName;
-        }
+        $tableName = static::$tableName ?? static::getTableName();
 
         $data = DB::table($tableName)
             ->orderByDesc($columnName)
