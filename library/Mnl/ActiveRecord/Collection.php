@@ -23,7 +23,7 @@ class Collection
 
     protected function parseWhere($clauses)
     {
-        if (!is_array($data)) {
+        if (!is_array($clauses)) {
             return $this;
         }
         foreach ($clauses as $key => $value) {
