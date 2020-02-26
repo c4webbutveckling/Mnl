@@ -122,6 +122,9 @@ class Base extends AbstractStorage
 
     public function updateAttributes($data)
     {
+        if (!is_array($data)) {
+            return $this;
+        }
         $inflector = new Inflector();
         foreach ($data as $key => $value) {
             $key = $inflector->camelize($key);

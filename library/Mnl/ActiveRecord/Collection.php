@@ -23,6 +23,9 @@ class Collection
 
     protected function parseWhere($clauses)
     {
+        if (!is_array($data)) {
+            return $this;
+        }
         foreach ($clauses as $key => $value) {
             $key = explode(' ', $key);
             $op = $key[1];
@@ -40,6 +43,7 @@ class Collection
                 $this->_query->where($column, $op, $value);
             }
         }
+        return $this;
     }
 
     public function raw(Closure $callback)
