@@ -58,8 +58,8 @@ class Base extends AbstractStorage
         $className = $reflector->getName();
 
         $result = parent::find($value, $columnName);
-        if ($result === false) {
-            return;
+        if (is_null($result)) {
+            return null;
         }
         $object = new $className;
         $object->updateAttributes($result);
@@ -73,8 +73,8 @@ class Base extends AbstractStorage
         $className = $reflector->getName();
 
         $result = parent::latest($columnName);
-        if ($result === false) {
-            return;
+        if (is_null($result)) {
+            return null;
         }
         $object = new $className;
         $object->updateAttributes($result);
